@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head lang="en">
+        <meta charset="UTF-8" />
+        <title>Accounts</title>
+    </head>
+    <body>
+
+        <header>
+            <nav>
+                <ul>
+                    <li>
+                        <a th:href="@{/}">Main page</a>
+                    </li>
+                    <li>
+                        <a th:href="@{/accounts}">Accounts</a>
+                    </li>
+                    <li>
+                        <a th:href="@{/persons}">Persons</a>
+                    </li>
+                </ul>
+            </nav>
+        </header>
+        
+            <a th:href="@{/index}">Main page</a> | 
+            <a th:href="@{/accounts}">List</a> |
+            <a th:href="@{/persons}">Form</a>
+        
+        <h2>Accounts</h2>
+
+        <ol>
+            <li th:each="account : ${accounts}">
+                <span th:text="${account.username}">msg</span>
+            </li>
+        </ol>
+
+        <form method="POST" th:action="@{/accounts}">    
+            <!-- <p>Name<input type="text" name="name"</input></p>
+              <p>Profile name<input type="text" name="profile"</input></p>-->
+            <p>Username<input type="text" name="username"</input></p>
+            <p>Password<input type="password" name="password"</input></p>
+            <input type="submit" value="Add new account!"/>
+        </form>
+    </body>
+</html>

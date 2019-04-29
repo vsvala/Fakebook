@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head lang="en">
+        <meta charset="UTF-8" />
+        <title>Picture album</title>
+    </head>
+    <body>
+    <div th:replace="fragments/layout :: header"></div>
+
+        <h1>Picture album</h1>
+
+        
+          <h2>My pictures: <span th:text="${user}">user</span> (<span th:text="${count}">count</span> images)</h2>
+
+        <div th:if="${current != null}">
+            <img th:src="@{/potos/{id}/(id=${current})}"/>
+        </div>
+
+        <div th:if="${previous != null}">
+            <a th:href="@{/photos/{id}(id=${previous})}">Previous</a>
+        </div>
+
+        <div th:if="${next != null}">
+            <a th:href="@{/potos/{id}(id=${next})}">Next</a>
+        </div> 
+ 
+        
+        
+        <table>
+            <thead>
+                <tr>
+                    <!--    <th>Filename</th><th>Size</th><th>Content-Type</th><th>Delete</th>-->
+                     <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+               <tr 
+                    th:if="${myphotos.empty}">
+                    <td colspan="4">No photos</td>
+                </tr>
+                <tr th:each="photo : ${myphotos}">
+                    <td><a th:href="@{/photos/{id}(id=${photo.id})}" th:text="${photo.description}">description</a></td>
+                <td th:text="${photo.description}">description</td>
+                    <td><form th:action="@{/photos/{id}(id=${photo.id})}" th:method="delete"><input type="submit" value="Delete"/></form></td>
+             
+                    <td> <form th:action="@{/photos/{id}/profilepicture(id=${photo.id})}" th:method="POST">
+                  <input type="submit" value="Add profile picture"/></form></td>
+           
+                    
+                    
+                 <!-- <td><form method="POST" th:action="@{/profiles/photos/{id}(id=${photo.id})}">     
+                        </form> </td> --> 
+                
+                </tr>
+            </tbody>
+        </table>
+     
+          
+        
+                <h2>Add new picture</h2>
+
+        <form method="POST" action="/photos" enctype="multipart/form-data">
+            <input type="file" name="file" id="file"/>   
+            <p>Description: <input type="text" name="description"</input></p> 
+            <input type="submit" value="Add"/>          
+        </form>
+                
+        
+       <h2>All pictures</h2>
+        <table>
+            <thead>
+                <tr>
+                    <!--    <th>Filename</th><th>Size</th><th>Content-Type</th><th>Delete</th>-->
+                     <th>Description</th>
+                </tr>
+            </thead>
+            <tbody> <tr 
+                    th:if="${photos.empty}">
+                    <td colspan="4">No photos</td>
+                </tr>
+                <tr th:each="photo : ${photos}">
+                    <td><a th:href="@{/photos/{id}(id=${photo.id})}" th:text="${photo.description}">description</a></td>
+                <td th:text="${photo.description}">description</td>
+                    <td><form th:action="@{/photos/{id}(id=${photo.id})}" th:method="delete"><input type="submit" value="Delete"/></form></td>
+               
+               
+            </tbody>
+        </table>        
+                
+                
+             <h1  th:text="${profilePicture}">profile</h1>
+   
+            <!--  <div th:if="${profilePicture!= null}">
+                    <img style="width:100%; height:100%" th:src="@{/photos/{id}(id=${photo.id})}" alt=""/>
+                </div> -->
+                
+    </body>
+</html>

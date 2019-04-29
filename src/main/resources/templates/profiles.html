@@ -1,0 +1,124 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Profile</title>
+    </head>
+    <body>
+        <div th:replace="fragments/layout :: header"></div>
+
+
+        <h1>Add profile to account: <span th:text="${account.username}">msg</span> </h1>
+
+        <h2>Create profile</h2>
+
+        <form method="POST" th:action="@{/profiles}">    
+            <p>Profile name:<input type="text" name="profileName"</input></p> 
+            <input type="submit" value="Add new profile!"/>
+        </form>    
+
+        <h1>Add profile picture</h1>
+        <!--voisko tässä olla profilepicture myös
+        <ul>
+        <li th:each="friend : ${friends}">
+               <form th:action="@{/account/{id}/friends/{friendId}(id=${account.id},friendId=${friend.id})}" method="POST">
+                   <input type="submit" th:value="${'Add friend ' + friend.profileName}"/>
+               </form>
+           </li>
+       </ul>-->
+
+
+        <!--   <h1>Add yo  ur personal details</h1>
+       
+         <form th:action="@{/persons}" method="POST">
+           <p>Profile name: <input type="text" name="name"></input></p>
+       <p>Identifier: <input type="text" name="identifier"></input></p>
+           <input type="submit" value="Add"></input>
+       </form>-->
+
+         <!-- <h1>Add friend (accounts)</h1>
+       /////////by <span th:text="${person.user.username}">msg</span>
+        <ul>
+            <li th:each="profile: ${profiles}">
+                name: <span th:text="${profile.profileName}">msg</span>
+                // by <span th:text="${person.user.username}">msg</span>
+                //identifier(account): <span th:text="${person.name}">msg</span>
+               
+            </li>
+        </ul>-->
+        <h2>Current profiles</h2>
+        <ol>
+            <li th:each="profile : ${profiles}">
+                <span th:text="${profile.profileName}">person name</span>
+
+                <!--    <div th:if="${friend.user} == null">
+                           -- Unassigned. Assign to:<br/>
+                           <form th:action="@{/friends/{friendId}/accounts)" method="POST">
+                <!-- <select name="userId">
+                         <option th:value="${friend.profileName}" th:text="${person.profileName}"></option>
+                     </select>
+                     <input type="submit" value="Add as friend"/>
+                 </form>
+          
+
+             <span th:if="${friend.user} != null">
+                 attassaa <span th:text="${friend.user.name}">account</span>
+             </span> -->
+            </li>
+        </ol>
+
+
+
+
+
+        <!--     <h1>Search for friends</h1>
+
+       <form th:object="${person}" th:action="@{/persons}" method="get">
+           <input type="text" name="search" id="search" th:value="${search}"/>
+           <input type="submit" value="Search"/>
+           <div th:if="${not #lists.isEmpty(search)}">
+
+               <h2>Friend List</h2>
+               <table>
+                   <tr>
+                       <th>Id</th>
+                       <th>Name</th>
+                        <th>Surname</th>
+                   </tr>
+                   <tr th:each="person: ${search}">
+                       <td th:text="${person.id}"><a href="/person/${person.id}">id</a></td>
+                       <td th:text="${person.profileName}">name</td>
+        <!--   <td th:text="${student.surname}">surname</td>
+    </tr>
+</table>
+</div>
+</form>
+
+<h2>Search for students</h2>
+<form th:object="${student}" th:action="@{/students}" method="get">
+<input type="text" name="search" id="search" th:value="${search}"/>
+<input type="submit" value="Search"/>
+<div th:if="${not #lists.isEmpty(search)}">
+ <h2>Students List</h2>
+ <table class="table table-striped">
+     <tr>
+         <th>Id</th>
+         <th>Name</th>
+         <th>Surname</th>
+     </tr>
+     <tr th:each="student: ${search}">
+         <td th:text="${student.idStudent}"><a href="/student/${student.idStudent}">idStudent</a></td>
+         <td th:text="${student.name}">name</td>
+         <td th:text="${student.surname}">surname</td>
+     </tr>
+ </table>
+</div>
+</form>-->           
+
+
+
+
+
+
+    </body>
+</html>

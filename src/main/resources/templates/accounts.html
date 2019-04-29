@@ -5,41 +5,43 @@
         <title>Accounts</title>
     </head>
     <body>
-
-        <header>
-            <nav>
-                <ul>
-                    <li>
-                        <a th:href="@{/}">Main page</a>
-                    </li>
-                    <li>
-                        <a th:href="@{/accounts}">Accounts</a>
-                    </li>
-                    <li>
-                        <a th:href="@{/persons}">Persons</a>
-                    </li>
-                </ul>
-            </nav>
-        </header>
+    <div th:replace="fragments/layout :: header"></div>
         
-            <a th:href="@{/index}">Main page</a> | 
-            <a th:href="@{/accounts}">List</a> |
-            <a th:href="@{/persons}">Form</a>
-        
-        <h2>Accounts</h2>
-
-        <ol>
-            <li th:each="account : ${accounts}">
-                <span th:text="${account.username}">msg</span>
-            </li>
-        </ol>
+      <h2>Register account</h2>
 
         <form method="POST" th:action="@{/accounts}">    
-            <!-- <p>Name<input type="text" name="name"</input></p>
-              <p>Profile name<input type="text" name="profile"</input></p>-->
+             <p>name<input type="text" name="name"</input></p>
+            <p>Profile name<input type="text" name="identifier"</input></p>
             <p>Username<input type="text" name="username"</input></p>
             <p>Password<input type="password" name="password"</input></p>
             <input type="submit" value="Add new account!"/>
-        </form>
+        </form>  
+      
+    
+    <h2>Accounts</h2>
+
+        
+    <!--   <ol>
+            <li th:each="account : ${accounts}">
+                 account: <span th:text="${account.id}">tilin id</span>, 
+                username<span th:text="${account.username}">msg</span>
+                 name<span th:text="${account.name}">msg</span>
+                 Profile name identifier<span th:text="${account.identifier}">msg</span>
+                 //password<span th:text="${account.password}">msg</span>
+                Friends: <span th:text="${account.profiles.size()}">amount</span> 
+            </li>
+        </ol>-->
+  <ol>
+            <li th:each="account : ${accounts}">
+                <a th:href="@{/account/{id}(id=${account.id})}">
+                 account: <span th:text="${account.id}">tilin id</span>, 
+                username<span th:text="${account.username}">msg</span>
+                 name<span th:text="${account.name}">msg</span>
+                 Profile name identifier<span th:text="${account.identifier}">msg</span>
+                 password<span th:text="${account.password}">msg</span>
+                Friends: <span th:text="${account.profiles.size()}">amount</span>  </a>
+            </li>
+        </ol>
+
     </body>
 </html>

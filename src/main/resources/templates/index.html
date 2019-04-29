@@ -5,33 +5,19 @@
         <title>Fakebook</title>
     </head>
     <body>
-               <header>
-            <nav>
-                <ul>
-                    <li>
-                        <a th:href="@{/}">Main page</a>
-                    </li>
-                    <li>
-                        <a th:href="@{/accounts}">Accounts</a>
-                    </li>
-                    <li>
-                        <a th:href="@{/persons}">Persons</a>
-                    </li>
-                </ul>
-            </nav>
-        </header>
-        
-            <a th:href="@{/index}">Main page</a> | 
-            <a th:href="@{/accounts}">List</a> |
-            <a th:href="@{/persons}">Form</a>
-        
-        
-        
-        <form th:action="@{/logout}" method="POST">
-            <input type="submit" value="Logout"></input>
-        </form>
+        <div th:replace="fragments/layout :: header"></div>
+
         <h1>Fakebook</h1>
-        <h1 th:text="${'Hello ' + message}">Hello world</h1>
+        
+        <a href="/login">login</a>
+        <br/>
+       <br/>
+        <a href="/accounts">Register new account</a><br/>
+   
+        
+       <!-- <h1 th:text="${'Hello ' + message}">Hello world</h1>-->
+
+
 
 
     </body>

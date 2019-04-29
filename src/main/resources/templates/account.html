@@ -1,0 +1,103 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title th:text="${account.id}">Account id</title>
+    </head>
+ 
+    <body>
+        <div th:replace="fragments/layout :: header"></div>
+      
+        <h1 th:text="${'Account ' + account.id+ account.name}">Tilin tunnus</h1>
+ 
+ 
+        <!--    <div th:text="${photo.}">description>
+                  
+ 
+            
+             <h2>profile:</h2>
+            <h1  th:text="${'Profile: ' +profile}">profile</h1>
+    <h1  th:text="${profilePicture}">profile</h1> 
+    -->
+
+                 
+        <h2>profile picture:</h2>
+            <h1  th:text="${profilePicture}">profile</h1>        
+            
+          <h2>Your friends:</h2>
+        
+        <ol>
+            <li th:each="profile: ${account.profiles}">
+                <span th:text="${profile.profileName}">Kaverinnimi</span>
+            </li>
+        </ol>
+          
+           <!--    <h2>Your friendsssssssss</h2> 
+       
+        <ul>
+            <li th:each="friend: ${friends}">
+                <span th:text="${friend.profileName}">Kaverinnimi</span>
+            </li>
+        </ul>-->
+    
+     
+    <h2>Add new friend</h2>
+        <ul>
+         <li th:each="profile : ${profiles}">
+                <form th:action="@{/account/{id}/profiles/{profileId}(id=${account.id},profileId=${profile.id})}" method="POST">
+                    <input type="submit" th:value="${'Add friend ' + profile.profileName}"/>
+                </form>
+            </li>
+        </ul>
+    
+    
+    <h2>All profiles</h2>
+        <ol>
+            <li th:each="profile : ${profiles}">
+                 Profile name<span th:text="${profile.profileName}">msg</span>
+            </li>
+        </ol>
+    
+    
+    </body>
+</html>
+
+
+
+
+<!--<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8" />
+        <title th:text="${person.name}">JCVD</title>
+    </head>
+    <body>
+
+        <h1>User <span th:text="${person.name}">JCVD</span></h1>
+
+        <h2>Friends</h2>
+
+        <div>
+            <ul>
+                <li th:each="friend : ${person.friends}" th:text="${friend.name}"></li>
+            </ul>
+        </div>
+
+        <div th:if="${not #lists.isEmpty(friends)}">
+
+            <h2>Assign to friend</h2>
+
+            <form method="POST" th:action="@{/persons/{personId}/friends(personId=${person.id})}">
+                <select name="friendId">
+                    <option th:each="friend : ${friends}" th:value="${friend.id}" th:text="${friend.name}">movie</option>
+                </select>
+                <input type="submit" value="Assign" id="add-to-friend"/>
+            </form>
+        </div>
+
+        <div><a href="/persons">Persons</a></div>
+
+    </body>
+
+</html>-->
+
+
+

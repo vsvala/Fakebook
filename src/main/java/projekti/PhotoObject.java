@@ -28,8 +28,8 @@ public class PhotoObject extends AbstractPersistable<Long> {
 //    private Profile profile;  
     
     
-    @Lob
-    @Basic(fetch = FetchType.LAZY) 
+   // @Lob poistoon herokun takia
+ //   @Basic(fetch = FetchType.LAZY) 
     private byte[] content;
     private String description;
     

@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-    <head lang="en">
-        <meta charset="UTF-8" />
-        <title>Picture album</title>
-    </head>
+ <head th:replace="fragments/layout :: head(title='Photos')"></head>
+
     <body>
         <div th:replace="fragments/layout :: header"></div>
 
+         <div class="container"> 
+        
         <h1>Picture album</h1>
 
 
@@ -97,6 +97,6 @@
         <!--  <div th:if="${profilePicture!= null}">
                 <img style="width:100%; height:100%" th:src="@{/photos/{id}(id=${photo.id})}" alt=""/>
             </div> -->
-
+        </div>
     </body>
 </html>

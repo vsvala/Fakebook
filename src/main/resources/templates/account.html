@@ -1,12 +1,14 @@
 <!DOCTYPE HTML>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-    <head>
-        <title th:text="${user.username}">Account id</title>
-    </head>
+   <head th:replace="fragments/layout :: head(title='Friends')"></head>
+
 
 
     <body>
         <div th:replace="fragments/layout :: header"></div>
+        
+           <div class="container"> 
+        
         <h1> <span th:text="${username}">username</span>'s Account and friends</h1>
         <h1 th:text="${'Account '+ user.username+user.id}">Tilin tunnus</h1>
 
@@ -49,7 +51,7 @@
               
             </li>
         </ol>
-        </div>
+        
           <fieldset>
 
         <h2>Search from all users</h2>      
@@ -116,7 +118,7 @@
         </ol>
 
      <form th:action="@{/account/{id}/delete(id=${user.id})}" th:method="delete"><input type="submit" value="Delete account"/></form>
-
+    </div>
     </body>
 </html>
 

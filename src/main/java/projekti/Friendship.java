@@ -22,7 +22,7 @@ public class Friendship extends AbstractPersistable<Long> {
       
    
    // private boolean accepted;
-    private LocalDateTime date;
+    private LocalDateTime date= LocalDateTime.now();
     private String profileName;
     @ManyToMany(mappedBy = "friendships")//tulisko tää sittenki toisinpäin..
     private List<Account>accounts = new ArrayList<>();

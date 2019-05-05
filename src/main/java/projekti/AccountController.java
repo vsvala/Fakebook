@@ -47,10 +47,11 @@ public class AccountController {
     //???????klickin one  account you get to see it account..friends
     @GetMapping("/account/{id}")
     public String getOne(Model model, @PathVariable Long id) {
-        Account account = accountRepository.getOne(id);
+        Account user = accountRepository.getOne(id);
+
         List<Friendship> friendships = friendshipRepository.findAll();
 
-        model.addAttribute("account", account);
+        model.addAttribute("user", user);
         model.addAttribute("accounts", accountRepository.findAll());
         model.addAttribute("friendships", friendships);
 
@@ -63,26 +64,24 @@ public class AccountController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
         Account user = accountRepository.findByUsername(username);
-        // Account account = accountRepository.getOne(user.getId());
         Account account = accountRepository.findByUsername(username);
+      
+        List<Account> frequests =new ArrayList();
 
-        List<Friendship> friends = user.getFriendships();
-        List<Friendship> af = new ArrayList();
-
+     if(user.getFriendships().size()>=0){
         Friendship frienship = user.getFriendships().get(0);//eka on aina userin koska luodaan tehdessä
 
         if (frienship.getAccounts() != null) {
-            List<Account> ap = frienship.getAccounts();//kaikki tilit jotkaovat kyseisen profiilin ysäväksihakeneet
-            if (ap.contains(user)) {
-                ap.remove(user);
+            frequests = frienship.getAccounts();//kaikki tilit jotkaovat kyseisen profiilin ysäväksihakeneet
+            if (frequests.contains(user)) {
+                frequests.remove(user);
             }
-//     
+        }    
             List<Account> accounts = accountRepository.findAll();
             if (accounts.contains(user)) {
                 accounts.remove(user);
             }
 
-            List<Friend> afriends = user.getFriends();
             List<Friend> userfriends = account.getFriends();//Userinkvetit
 
             List<Account> friendusers = new ArrayList();
@@ -95,58 +94,49 @@ public class AccountController {
             model.addAttribute("searched", searched);
             model.addAttribute("friendusers", friendusers);
             model.addAttribute("userfriends", userfriends);
-            model.addAttribute("af", af);
-            model.addAttribute("account", account);
+ 
+            model.addAttribute("user", user);
             model.addAttribute("accounts", accounts);
-            model.addAttribute("friends", friends);
-            // model.addAttribute("userfriends", userfriends);
-            model.addAttribute("ap", ap);
-
+    
+            model.addAttribute("frequests", frequests);
             model.addAttribute("friendships", friendshipRepository.findAll());
             model.addAttribute("allfriends", friendRepository.findAll());
-            model.addAttribute("afriends", afriends);
         }
         List<Account> accounts = accountRepository.findAll();
         if (accounts.contains(user)) {
             accounts.remove(user);
         }
-
-        model.addAttribute("af", af);
-        model.addAttribute("account", account);
+        
+        model.addAttribute("user", user);
         model.addAttribute("accounts", accounts);
-        model.addAttribute("friends", friends);
-        // model.addAttribute("ap", ap);
         model.addAttribute("friendships", friendshipRepository.findAll());
         model.addAttribute("username", username);
 
         return "account";
     }
 
-    //  get all user's  friends 
+   //  get all user's  friends 
     @GetMapping("/account/friendships")
     public String getfriends(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
         Account user = accountRepository.findByUsername(username);
         Account account = accountRepository.getOne(user.getId());
-
-        List<Friendship> friends = user.getFriendships();
-        List<Friendship> af = new ArrayList();
-
-        Friendship frienship = user.getFriendships().get(0);//eka on aina userin koska luodaan tehdessä
-
+          List<Account> frequests =new ArrayList();
+        
+       // if(user.getFriendships().size()>0){
+        Friendship frienship = user.getFriendships().get(0);//eka on aina userin koska luodaan tehdessa
         if (frienship.getAccounts() != null) {
-            List<Account> ap = frienship.getAccounts();//kaikki tilit jotkaovat kyseisen profiilin ysäväksihakeneet
-            if (ap.contains(user)) {
-                ap.remove(user);
+        frequests = frienship.getAccounts();//kaikki tilit jotkaovat kyseisen profiilin ysäväksihakeneet
+            if (frequests.contains(user)) {
+                frequests.remove(user);
             }
-//     
+            //  }
             List<Account> accounts = accountRepository.findAll();
             if (accounts.contains(user)) {
                 accounts.remove(user);
             }
-
-            List<Friend> afriends = user.getFriends();
+      
             List<Friend> userfriends = account.getFriends();//Userinkvetit
 
             List<Account> friendusers = new ArrayList();
@@ -156,34 +146,34 @@ public class AccountController {
 
             Account searched = new Account();
 
-            model.addAttribute("searched", searched);
-            model.addAttribute("friendusers", friendusers);
-            model.addAttribute("userfriends", userfriends);
-            model.addAttribute("af", af);
-            model.addAttribute("account", account);
+            model.addAttribute("searched", searched); //search
+            model.addAttribute("friendusers", friendusers); // shows accepted friends fo request sender
+            model.addAttribute("userfriends", userfriends); //shows accepted friends fo receiver
+        
+            model.addAttribute("user", user); 
             model.addAttribute("accounts", accounts);
-            model.addAttribute("friends", friends);
-            model.addAttribute("ap", ap);
-
-            model.addAttribute("friendships", friendshipRepository.findAll());
+            
+            model.addAttribute("frequests", frequests); //friend acceptance requests friends
+            model.addAttribute("friendships", friendshipRepository.findAll());//all friendships
             model.addAttribute("allfriends", friendRepository.findAll());
-            model.addAttribute("afriends", afriends);
+   
         }
         List<Account> accounts = accountRepository.findAll();
         if (accounts.contains(user)) {
             accounts.remove(user);
         }
 
-        model.addAttribute("af", af);
-        model.addAttribute("account", account);
+        model.addAttribute("user", user);
         model.addAttribute("accounts", accounts);
-        model.addAttribute("friends", friends);
-        // model.addAttribute("ap", ap);
         model.addAttribute("friendships", friendshipRepository.findAll());
         model.addAttribute("username", username);
 
         return "account";
     }
+    
+    
+    
+    
 
     //creates account and frienship
     @PostMapping("/accounts")
@@ -191,6 +181,7 @@ public class AccountController {
         if (accountRepository.findByUsername(username) != null) {
             return "redirect:/accounts";
         }
+        //creating account
         Account account = new Account();
         account.setName(name);
         account.setUsername(username);
@@ -198,14 +189,10 @@ public class AccountController {
         account.setProfilename(profilename);
         accountRepository.save(account);
 
-        //creating friendshipstatus
+        //creating friendship
         Friendship friendship = new Friendship();;
-        // friendship.setAccepted(false);
-        //account.setAccepted(false);
-        // friendshipRepository.save(friendship);
         friendship.setProfileName(profilename);
-        // friendship.setMessageDate(LocalDateTime.now());
-        friendship.getAccounts().add(account);
+        friendship.getAccounts().add(account);//set as your friend 0 in the list
         account.getFriendships().add(friendship);
         friendshipRepository.save(friendship);
         accountRepository.save(account);
@@ -213,26 +200,25 @@ public class AccountController {
         return "redirect:/account/friendships";
     }
 
-    //  Add friend request to account
+   //  Add friend request to account
     @Transactional
     @PostMapping("/accounts/{id}/add")
     public String addFriendShipRequest(@PathVariable Long id) {
 
-        //loggeduseraccount
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
         Account user = accountRepository.findByUsername(username);
-        System.out.println("uuuuuuuuuuu" + user.getProfilename() + user.getId());
-        //Account account = accountRepository.getOne(user.getId());
+        System.out.println("adding friendrequestuuuuuuuuuuu" + user.getProfilename() + user.getId());
         //String profilename=account.getProfilename();
 
-        //etsitään liityykö useriin jo ko frindship     //samaa kaveria ei lisätä useasti
+        //liittään account ja friendship
         Account friendAccount = accountRepository.getOne(id);
-//       String pn=account.getProfilename();
-        System.out.println("ppppppppppppp" + friendAccount.getProfilename() + friendAccount.getId());
+        System.out.println("täääääläineen ooooooooooooooooooooonppppppppppppp" + friendAccount.getProfilename() + friendAccount.getId());
+        
         Friendship friendship = friendshipRepository.findByprofileName(friendAccount.getProfilename());
+// 
 
-        List<Friendship> friendships = user.getFriendships();
+ List<Friendship> friendships = user.getFriendships();
         if (!friendships.contains(friendship)) {       //jos ei ole kaveri, lisätään kaveriksi   
             System.out.println("ei oo kaveriiiiiiiiiiiii");
 
@@ -248,7 +234,7 @@ public class AccountController {
         return "redirect:/account/friendships";
     }
 
-    // accepting friend
+   // accepting friend
     @PostMapping("/accounts/{id}/accept")
     public String acceptFriend(@PathVariable Long id) {
         System.out.println("iiddddddddd" + id);
@@ -262,10 +248,12 @@ public class AccountController {
             Friend f = new Friend();
             f.setFriendname(userAccount.getUsername());
             f.setUsername(friendAccount.getUsername());
+
             friendRepository.save(f);
+
         }
 
-        Friend f = friendRepository.findByusername(friendAccount.getUsername()); //kaveri haetaaan
+        Friend f = friendRepository.findByusername(friendAccount.getUsername());
 
         if (!userAccount.getFriends().contains(f)) {//jos ei oo  userin lisassa kaverina lisätään sinne
             System.out.println("lisätään uusi kaveri nimikaverilistalle");
@@ -274,8 +262,40 @@ public class AccountController {
             f.getAccounts().add(userAccount);
             friendRepository.save(f);
 
+       
+
+        //remooves accepted frienship
+            System.out.println("useraccountiddddddd" + userAccount.getId());
+            System.out.println("friendccountiddddddd" + friendAccount.getId());
+            Friendship fs = friendshipRepository.findByprofileName(friendAccount.getProfilename()); //kaveri haetaaan 2
+            Friendship fs2 = friendshipRepository.findByprofileName(userAccount.getProfilename()); //kaveri haetaaan 2
+
+            System.out.println("poistoonfs" + fs.getId()); 
+            System.out.println("fstoinenpoistoon" + fs2.getId()); 
+           //List<Friendship> friendshipList = userAccount.getFriendships();
+            //userAccount.getFriendships().remove(fs);
+           // accountRepository.save(userAccount);
+            
+           // friendAccount.getFriendships().remove(fs);
+            friendAccount.getFriendships().remove(fs2);
+            accountRepository.save(friendAccount);
+            
+            //fs.getAccounts().remove(userAccount);   
+           // fs.getAccounts().remove(friendAccount);
+            //friendshipRepository.save(fs);
+            System.out.println("nollas"+userAccount.getFriendships().get(0).getProfileName());
+          
+            Friendship friendship = userAccount.getFriendships().get(0);//eka on aina userin koska luodaan tehdessä
+             System.out.println("nollas"+ friendship.getProfileName());
+//            friendship.getAccounts().remove(userAccount);   
+//            friendship.getAccounts().remove(friendAccount);
+//             friendshipRepository.save(friendship);
+             //friendshipRepository.delete(friendship);
+            
+
         } else {
-            System.out.println("kaveri on jo");
+            System.out.println("kaveri on jo"); 
+            
         }
 
         return "redirect:/account/friendships";
@@ -286,15 +306,15 @@ public class AccountController {
 
         if (accountRepository.findByUsername(searched) == null) {
             return "redirect:/account/friendships";
-
         }
         Account user = accountRepository.findByUsername(searched);
         return "redirect:/account/friendships/" + user.getId();
 
     }
 
-    @DeleteMapping(path = "/account/{id}/delete")
+    @DeleteMapping(path = "/account/{id}/reject")
     public String deleteAccount(@PathVariable Long id) {
+        
         Account account = accountRepository.getOne(id);
 
         accountRepository.delete(account);
@@ -302,4 +322,40 @@ public class AccountController {
         return "redirect:/logout";
 
     }
+       @DeleteMapping(path = "/account/{id}/delete")
+    public String rejecttFriend(@PathVariable Long id) {
+       
+//       Friendship fs = friendshipRepository.getOne(id);
+//       friendAccount.getFriendships().remove(fs2);
+//       accountRepository.save(friendAccount);
+
+        return "redirect:/logout";
+
+    }
+    
+    
 }
+                  //remooves accepted frienship
+//            System.out.println("useraccountiddddddd" + userAccount.getId());
+//            System.out.println("friendccountiddddddd" + friendAccount.getId());
+//            Friendship fs = friendshipRepository.findByprofileName(friendAccount.getProfilename()); //kaveri haetaaan 2
+//            System.out.println("fs" + fs.getId()); 
+//           
+//           //List<Friendship> friendshipList = userAccount.getFriendships();
+//            userAccount.getFriendships().remove(fs);
+//            accountRepository.save(userAccount);
+//            
+//            friendAccount.getFriendships().remove(fs);
+//            accountRepository.save(friendAccount);
+//            
+//            fs.getAccounts().remove(userAccount);   
+//            fs.getAccounts().remove(friendAccount);
+//            friendshipRepository.save(fs);
+//            System.out.println("nollas"+userAccount.getFriendships().get(0).getProfileName());
+//             Friendship friendship = userAccount.getFriendships().get(0);//eka on aina userin koska luodaan tehdessä
+//            friendship.getAccounts().remove(userAccount);   
+//            friendship.getAccounts().remove(friendAccount);
+//             friendshipRepository.save(friendship);
+//             //friendshipRepository.delete(friendship);
+  
+           

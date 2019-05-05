@@ -40,9 +40,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated().and()
                 .formLogin().permitAll().and()
                 .logout().permitAll();
-//////                 http.formLogin().permitAll().and()
-//////              //  http.formLogin().permitAll().and()
-//////                .logout().permitAll();//tämä
+
     }
     
 //        @Autowired

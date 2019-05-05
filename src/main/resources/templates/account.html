@@ -1,22 +1,25 @@
 <!DOCTYPE HTML>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
     <head>
-        <title th:text="${account.username}">Account id</title>
+        <title th:text="${user.username}">Account id</title>
     </head>
 
 
     <body>
         <div th:replace="fragments/layout :: header"></div>
         <h1> <span th:text="${username}">username</span>'s Account and friends</h1>
-        <h1 th:text="${'Account '+ account.username+account.id}">Tilin tunnus</h1>
+        <h1 th:text="${'Account '+ user.username+user.id}">Tilin tunnus</h1>
 
 
+        
         <h2>Your Friends:</h2>
+        
         <ol>
             <li th:each="uf: ${userfriends}">
                 <span th:text="${uf.username}">Kaverinnimi</span> and
                 <span th:text="${uf.friendname}">Kaverinnimi</span> are friends now
 
+                
             </li>
             <li th:each="f: ${friendusers}">
                 <span th:text="${f.username}">Kaverinnimi</span> on kaverisi
@@ -29,21 +32,24 @@
 
         <h2>Accept friendship requests</h2>
 
-        <!--tiettyyn profiiliiin liiityvät accountita-->
+        <!--tiettyyn profiiliiin liiityvät accountita
+        <div th:if="${frequests ==null }">-->
         <ol>
-            <li th:each="account: ${ap}">
+            <li th:each="account: ${frequests}">
                 <span th:text="${account.username}">Kaverinnimi</span>
+                
+                
                 <form th:action="@{/accounts/{id}/accept(id=${account.id})}" method="POST">
                     <input type="submit" th:value="${'Accept ' + account.username}"/>
                 </form>
 
-
-                <!-- TODO poisto-->
-
+                  <form th:action="@{/accounts/{id}/reject(id=${account.id})}" method="DELETE">
+                    <input type="submit" th:value="${'Dont accept ' + account.username}"/>
+                </form>
+              
             </li>
         </ol>
-
-
+        </div>
           <fieldset>
 
         <h2>Search from all users</h2>      
@@ -70,7 +76,7 @@
             <p th:text="${searched.username}">msg</p>
         </a>
         
-     
+       
         <form th:action="@{/accounts/{id}/add(id=${searched.id})}" method="POST">    <!--luodaan frienship/profiili/-->
             <input type="submit" th:value="${'Send friendship request'}"/>
         </form></div>
@@ -88,7 +94,9 @@
                     <!-- Profile name identifier<span th:text="${account.identifier}">msg</span>-->
                     password: <span th:text="${account.password}">msg</span> 
                     account: <span th:text="${account.id}">tilin id</span>, 
-                    Friends: <span th:text="${account.friendships.size()}">amount</span>  </a>
+                   <!-- Friends: <span th:text="${account.friendships.size()}">amount</span> -->
+                   </a> 
+                <!-- sending friendship request -->
                 <form th:action="@{/accounts/{id}/add(id=${account.id})}" method="POST">    <!--luodaan frienship/profiili/-->
                     <input type="submit" th:value="${'Send friendship request to ' + account.username +  account.id +' by '+username}"/>
                 </form>
@@ -97,14 +105,17 @@
 
 
 
-        <h2>All profiles</h2>
+        <h2>All friendships</h2>
         <ol>
-            <li th:each="friend : ${friendships}">
-                Profile name<span th:text="${friend.profileName}">msg</span>
+            <li th:each="fs : ${friendships}">
+                Profile name<span th:text="${fs.profileName}">msg</span>
+                id<span th:text="${fs.id}">msg</span>
+                 date<span th:text="${fs.date}">msg</span>
+
             </li>
         </ol>
 
-     <form th:action="@{/account/{id}/delete(id=${account.id})}" th:method="delete"><input type="submit" value="Delete account"/></form>
+     <form th:action="@{/account/{id}/delete(id=${user.id})}" th:method="delete"><input type="submit" value="Delete account"/></form>
 
     </body>
 </html>

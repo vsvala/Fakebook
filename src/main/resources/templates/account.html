@@ -64,13 +64,17 @@
   
         </form>
 
-
+         <!--show add button only if finds -->
+        <div th:if="${searched.username != null}">
         <a th:href="@{/account/{id}(id=${searched.id})}">
             <p th:text="${searched.username}">msg</p>
         </a>
+        
+     
         <form th:action="@{/accounts/{id}/add(id=${searched.id})}" method="POST">    <!--luodaan frienship/profiili/-->
             <input type="submit" th:value="${'Send friendship request'}"/>
-        </form>
+        </form></div>
+  
   </fieldset>
 
 

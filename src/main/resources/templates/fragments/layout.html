@@ -32,7 +32,11 @@
             <a th:href="@{/account/friendships}">Friends</a> |
             <a th:href="@{/photos}">Picture album</a>|
             <a th:href="@{/accounts}">Register</a> |
-            <a href="/login">login|</a>
+            <!-- Show login link only for anonymous users -->
+            <span sec:authorize="isAnonymous()">
+              <a href="/login" th:href="@{/login}" class="btn-login">Login</a>|
+            </span>
+           <!-- <a href="/login">login|</a>-->
              <a href="/logout">logout</a>
             <form th:action="@{/logout}" method="POST">
             <input type="submit" value="Logout"></input>

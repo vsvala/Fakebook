@@ -58,7 +58,7 @@ public class AccountController {
     }
 
     //  get all user's  friends 
-    @GetMapping("/accounts/friendships/{id}")
+    @GetMapping("/account/friendships/{id}")
     public String getFriendsSearch(Model model, @PathVariable Long id) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
@@ -265,7 +265,6 @@ public class AccountController {
             friendRepository.save(f);
         }
 
-        // if (friendRepository.findByusername(friendAccount.getUsername()) != null) {//jos on   
         Friend f = friendRepository.findByusername(friendAccount.getUsername()); //kaveri haetaaan
 
         if (!userAccount.getFriends().contains(f)) {//jos ei oo  userin lisassa kaverina lisätään sinne
@@ -279,21 +278,18 @@ public class AccountController {
             System.out.println("kaveri on jo");
         }
 
-        //  }
-//            userAccount.getFriendships().remove(f);//poistetaan kaveripyyntö
-//            accountRepository.save(userAccount);
-//             
-//       Friendship accepted=friendshipRepository.findByprofileName(friendAccount.getUsername());
-//       friendAccount.getFriendships().remove(accepted);
-//       accountRepository.save(friendAccount);
         return "redirect:/account/friendships";
     }
 
     @PostMapping("/accounts/search")
     public String searchUser(@RequestParam String searched) {
 
+        if (accountRepository.findByUsername(searched) == null) {
+            return "redirect:/account/friendships";
+
+        }
         Account user = accountRepository.findByUsername(searched);
-        return "redirect:/accounts/friendships/" + user.getId();
+        return "redirect:/account/friendships/" + user.getId();
 
     }
 

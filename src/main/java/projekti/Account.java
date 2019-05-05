@@ -35,10 +35,10 @@ public class Account extends AbstractPersistable<Long> {
  
     @OneToOne 
     private ProfilePicture picture;
-    
+//    
 //    @OneToOne
 //    private Wall wall;
-    
+//    
     @OneToMany
     private List<Message> messages;
    

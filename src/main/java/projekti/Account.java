@@ -19,15 +19,27 @@ import org.springframework.data.jpa.domain.AbstractPersistable;
 @AllArgsConstructor
 public class Account extends AbstractPersistable<Long> {
   
-    
+   // private boolean accepted;
     private String name;
-    @ManyToMany//(mappedBy = "accounts")
-    private List<Profile>profiles= new ArrayList<>();
+    private String profilename;
+    @ManyToMany//(mappedBy = "accounts")//tää vois olla vaan yks
+    private List<Friendship>friendships= new ArrayList<>();
     private String username;
     private String password;
-    private String identifier;
   
+    @ManyToMany
+    private List<Friend> friends;;
+    
     @OneToMany// @Size( min=0,max=10)
-    private List<PhotoObject>photos= new ArrayList<>();;
+    private List<PhotoObject>photos= new ArrayList<>();
+ 
+    @OneToOne 
+    private ProfilePicture picture;
+    
+//    @OneToOne
+//    private Wall wall;
+    
+    @OneToMany
+    private List<Message> messages;
    
 }

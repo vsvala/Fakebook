@@ -5,32 +5,33 @@
  */
 package projekti;
 
-import javax.persistence.Basic;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
+/**
+ *
+ * @author svsv
+ */
+@Entity
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
-@Entity
-public class PhotoObject extends AbstractPersistable<Long> {
-    
-    
-    
-   // @Lob //poistoon herokun takia
-  //  @Basic(fetch = FetchType.LAZY) 
-    private byte[] content;
-    private String description;
-    private Long profilePictureId;
-    @ManyToOne
-    private Account user; //id  
-
-
+public class Friend extends AbstractPersistable<Long>{
+//    
+    @ManyToMany(mappedBy = "friends")//tulisko tää sittenki toisinpäin..
+    private List<Account>accounts = new ArrayList<>();
+    @Column(unique=true)
+    private String username;
+    private String friendname;
+       
 }
+
+ 

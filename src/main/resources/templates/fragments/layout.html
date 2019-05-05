@@ -28,13 +28,12 @@
             </nav>-->
          
             <a th:href="@{/index}">Main page</a> | 
-            <a th:href="@{/messages}">Wall</a>|
+            <a th:href="@{/messages}">Wall</a>|    
+            <a th:href="@{/account/friendships}">Friends</a> |
             <a th:href="@{/photos}">Picture album</a>|
-          
-              <a th:href="@{/profiles}">Create profile</a>|
             <a th:href="@{/accounts}">Register</a> |
-            <a th:href="@{/account/profiles}">Friends</a> |
-            
+            <a href="/login">login|</a>
+             <a href="/logout">logout</a>
             <form th:action="@{/logout}" method="POST">
             <input type="submit" value="Logout"></input>
             </form>

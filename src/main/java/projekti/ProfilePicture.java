@@ -3,6 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+    
 package projekti;
 
 import javax.persistence.Basic;
@@ -20,17 +21,18 @@ import org.springframework.data.jpa.domain.AbstractPersistable;
 @AllArgsConstructor
 @Data
 @Entity
-public class PhotoObject extends AbstractPersistable<Long> {
+public class ProfilePicture extends AbstractPersistable<Long> {
     
     
-    
-   // @Lob //poistoon herokun takia
-  //  @Basic(fetch = FetchType.LAZY) 
-    private byte[] content;
-    private String description;
-    private Long profilePictureId;
-    @ManyToOne
-    private Account user; //id  
+//    @Lob //poistoon herokun takia
+//    @Basic(fetch = FetchType.LAZY) 
+//    private byte[] content;
+//    private String description;
+//    private Long profilePictureId;
+//    @ManyToOne
+//    private Account user; //id  
+    private Long pictureId; //desc määritä nimi kuvallekin..
 
-
+    
 }
+

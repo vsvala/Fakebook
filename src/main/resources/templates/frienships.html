@@ -10,48 +10,27 @@
 
         <h1>Add profile to account: <span th:text="${account.username}">msg</span> </h1>
 
-        <h2>Create profile</h2>
+        <h2>Create profile name</h2>
 
         <form method="POST" th:action="@{/profiles}">    
             <p>Profile name:<input type="text" name="profileName"</input></p> 
             <input type="submit" value="Add new profile!"/>
         </form>    
 
-        <h1>Add profile picture</h1>
-        <!--voisko tässä olla profilepicture myös
-        <ul>
-        <li th:each="friend : ${friends}">
-               <form th:action="@{/account/{id}/friends/{friendId}(id=${account.id},friendId=${friend.id})}" method="POST">
-                   <input type="submit" th:value="${'Add friend ' + friend.profileName}"/>
-               </form>
-           </li>
-       </ul>-->
-
-
-        <!--   <h1>Add yo  ur personal details</h1>
-       
-         <form th:action="@{/persons}" method="POST">
-           <p>Profile name: <input type="text" name="name"></input></p>
-       <p>Identifier: <input type="text" name="identifier"></input></p>
-           <input type="submit" value="Add"></input>
-       </form>-->
-
-         <!-- <h1>Add friend (accounts)</h1>
-       /////////by <span th:text="${person.user.username}">msg</span>
-        <ul>
-            <li th:each="profile: ${profiles}">
-                name: <span th:text="${profile.profileName}">msg</span>
-                // by <span th:text="${person.user.username}">msg</span>
-                //identifier(account): <span th:text="${person.name}">msg</span>
-               
-            </li>
-        </ul>-->
+   
         <h2>Current profiles</h2>
         <ol>
             <li th:each="profile : ${profiles}">
                 <span th:text="${profile.profileName}">person name</span>
 
-                <!--    <div th:if="${friend.user} == null">
+           
+            </li>
+        </ol>
+
+    </body>
+</html>
+
+     <!--    <div th:if="${friend.user} == null">
                            -- Unassigned. Assign to:<br/>
                            <form th:action="@{/friends/{friendId}/accounts)" method="POST">
                 <!-- <select name="userId">
@@ -64,12 +43,6 @@
              <span th:if="${friend.user} != null">
                  attassaa <span th:text="${friend.user.name}">account</span>
              </span> -->
-            </li>
-        </ol>
-
-
-
-
 
         <!--     <h1>Search for friends</h1>
 
@@ -117,8 +90,33 @@
 
 
 
+        <!--
+        <ul>
+        <li th:each="friend : ${friends}">
+               <form th:action="@{/account/{id}/friends/{friendId}(id=${account.id},friendId=${friend.id})}" method="POST">
+                   <input type="submit" th:value="${'Add friend ' + friend.profileName}"/>
+               </form>
+           </li>
+       </ul>-->
 
 
+        <!--   <h1>Add yo  ur personal details</h1>
+       
+         <form th:action="@{/persons}" method="POST">
+           <p>Profile name: <input type="text" name="name"></input></p>
+       <p>Identifier: <input type="text" name="identifier"></input></p>
+           <input type="submit" value="Add"></input>
+       </form>-->
 
-    </body>
-</html>
+         <!-- <h1>Add friend (accounts)</h1>
+       /////////by <span th:text="${person.user.username}">msg</span>
+        <ul>
+            <li th:each="profile: ${profiles}">
+                name: <span th:text="${profile.profileName}">msg</span>
+                // by <span th:text="${person.user.username}">msg</span>
+                //identifier(account): <span th:text="${person.name}">msg</span>
+               
+            </li>
+        </ul>-->
+
+

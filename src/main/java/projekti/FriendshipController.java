@@ -15,22 +15,22 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
-public class ProfileController {
+public class FriendshipController {
 
     @Autowired
     private AccountRepository accountRepository;
 
     @Autowired
-    private ProfileRepository profileRepository;
+    private FriendshipRepository friendshipRepository;
     
     @Autowired
     private PhotoObjectRepository photoRepository;
 
 
-    @GetMapping("/profiles")
+    @GetMapping("/friendships")
     public String list(Model model) {
 
-        model.addAttribute("profiles", profileRepository.findAll());
+        model.addAttribute("friendships", friendshipRepository.findAll());
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
@@ -38,11 +38,11 @@ public class ProfileController {
         Account account = accountRepository.getOne(user.getId());
         model.addAttribute("account", account);
 
-        return "profiles";
+        return "friendships";
         // return "redirect:/accounts";
     }
 
-    @GetMapping("/profile/{id}")
+    @GetMapping("/friendships/{id}")
     public String getOne(Model model, @PathVariable Long id) {
 //        Account account = accountRepository.getOne(id);
 //        List<Friend> friends = friendRepository.findAll();
@@ -51,20 +51,20 @@ public class ProfileController {
 //        model.addAttribute("accounts", accountRepository.findAll());
 //        model.addAttribute("friends", friends);
 // 
-        return "profile";
+        return "friendship";
     }
     
      
 //    @GetMapping("account/profiles/{id}/photos")
 //    public String getProfilepicture(Model model, @PathVariable Long id) {
 //    
-//        model.addAttribute("profile", profileRepository.getOne(id));
-//        model.addAttribute("profilePicture", profileRepository.getOne(id).getProfilePicture() );
+//        model.addAttribute("friendship", friendshipRepository.getOne(id));
+//        model.addAttribute("profilePicture", friendshipRepository.getOne(id).getProfilePicture() );
 // 
 //        
 //        
 //        
-//        model.addAttribute("profiles", profileRepository.findAll());
+//        model.addAttribute("friendships", friendshipRepository.findAll());
 //
 //        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 //        String username = auth.getName();
@@ -79,11 +79,11 @@ public class ProfileController {
 ////        String username = auth.getName();
 ////        Account user = accountRepository.findByUsername(username);
 ////        Account account = accountRepository.getOne(user.getId());
-////          List<Profile>profiles= account.getProfiles();
+////          List<Profile>friendships= account.getProfiles();
 ////   
-////          for (Profile p : profiles) {
+////          for (Friendship p : friendships) {
 ////                if (p.getAccounts().equals(account)) {
-////                    System.out.println("tämä on userin profile");  
+////                    System.out.println("tämä on userin friendship");  
 ////                   pPicture= p.getProfilePicture();
 ////                    System.out.println(" p.getProfilePicture();");
 ////                }
@@ -92,43 +92,46 @@ public class ProfileController {
 //    }
     
     
-    @PostMapping("/profiles/photos/{id}")
-    public String chooseProfilePicture(@PathVariable Long id) {
-         PhotoObject profilePicture = photoRepository.getOne(id);
-         Long profileId=9L;
-         
+//    @PostMapping("/profiles/photos/{id}")
+//    public String chooseProfilePicture(@PathVariable Long id) {
+//         PhotoObject profilePicture = photoRepository.getOne(id);
+//         Long profileId=9L;
+//         
+//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//        String username = auth.getName();
+//        Account user = accountRepository.findByUsername(username);
+//        Account account = accountRepository.getOne(user.getId());
+//          List<Profile>friendships= account.getProfiles();
+//   
+//          for (Friendship p : friendships) {
+//                if (p.getAccounts().equals(account)) {
+//                    System.out.println("tämä on userin account, aseta kuva");  
+//                    p.setProfilePicture(profilePicture);
+//                   id=p.getId();
+//              break;
+//            }
+//               }
+//        // id=  profileId;
+//        return "redirect:/accounts/photos/{id}";
+//      //  return "friendship";
+//    }
+
+    //
+    @PostMapping("/friendships")
+    public String createProfile() { //(@RequestParam String profileName)//frienship
+
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
         Account user = accountRepository.findByUsername(username);
         Account account = accountRepository.getOne(user.getId());
-          List<Profile>profiles= account.getProfiles();
-   
-          for (Profile p : profiles) {
-                if (p.getAccounts().equals(account)) {
-                    System.out.println("tämä on userin account, aseta kuva");  
-                    p.setProfilePicture(profilePicture);
-                   id=p.getId();
-              break;
-            }
-               }
-        // id=  profileId;
-        return "redirect:/accounts/photos/{id}";
-      //  return "profile";
-    }
-
-    @PostMapping("/profiles")
-    public String createProfile(@RequestParam String profileName) {
-
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String username = auth.getName();
-        Account user = accountRepository.findByUsername(username);
-        Account account = accountRepository.getOne(user.getId());
-
-        List<Profile> profiles = account.getProfiles();     
+        String profilename=account.getProfilename();
+        
+        //tässä laitetaan nimeksi profiilin tunnus
+        List<Friendship> friendships = account.getFriendships();     
         
     //jos profiili jo olemassa ei luoda toista
-        if (profiles.size() > 0) {
-            for (Profile p : profiles) {
+        if (friendships.size() > 0) {
+            for (Friendship p : friendships) {
                 if (p.getAccounts().get(0).getUsername().equalsIgnoreCase(username)) {
                     System.out.println("olet jo luonut profiilin");  
               break;
@@ -136,14 +139,55 @@ public class ProfileController {
             }
         }
         else{ 
-          if (profileRepository.findByprofileName(profileName) == null &&(profiles.size() < 1)) {
+          if (friendshipRepository.findByprofileName(profilename) == null &&(friendships.size() < 1)) {
                         System.out.println("ei oo profiilia");
-                        Profile profile = new Profile();
-                        profileRepository.save(profile);
-                        profile.setProfileName(profileName);
-                        profile.getAccounts().add(account);
-                        account.getProfiles().add(profile);
-                        profileRepository.save(profile); 
+                        Friendship friendship = new Friendship();;
+                        //friendship.setAccepted(false);
+                        friendshipRepository.save(friendship);
+                        friendship.setProfileName(profilename);
+                        friendship.getAccounts().add(account);
+                        account.getFriendships().add(friendship);
+                        friendshipRepository.save(friendship); 
+                        accountRepository.save(account);
+       
+          }   
+
+        }    return "redirect:/account/profiles";
+
+    }
+    
+
+    @PostMapping("/friendships/account/{id}")
+    public String createFriendShip(@PathVariable Long id) { //(@RequestParam String profileName)//frienship
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+        Account user = accountRepository.findByUsername(username);
+        Account account = accountRepository.getOne(user.getId());
+        String profilename=account.getProfilename();
+        
+        //tässä laitetaan nimeksi profiilin tunnus
+        List<Friendship> friendships = account.getFriendships();     
+        
+    //jos profiili jo olemassa ei luoda toista
+        if (friendships.size() > 0) {
+            for (Friendship p : friendships) {
+                if (p.getAccounts().get(0).getUsername().equalsIgnoreCase(username)) {
+                    System.out.println("olet jo luonut profiilin");  
+              break;
+            }
+            }
+        }
+        else{ 
+          if (friendshipRepository.findByprofileName(profilename) == null &&(friendships.size() < 1)) {
+                        System.out.println("ei oo profiilia");
+                        Friendship friendship = new Friendship();;
+                        //friendship.setAccepted(false);
+                        friendshipRepository.save(friendship);
+                        friendship.setProfileName(profilename);
+                        friendship.getAccounts().add(account);
+                        account.getFriendships().add(friendship);
+                        friendshipRepository.save(friendship); 
                         accountRepository.save(account);
        
           }   
@@ -160,7 +204,7 @@ public class ProfileController {
 //////        Long profileId // @RequestParam Long accountId
 //////        
 //////            ) {
-//////        Profile f = profileRepository.getOne(profileId);
+//////        Friendship f = friendshipRepository.getOne(profileId);
 //////
 //////            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 //////            String username = auth.getName();

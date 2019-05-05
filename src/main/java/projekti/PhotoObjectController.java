@@ -31,8 +31,11 @@ public class PhotoObjectController {
     private AccountRepository accountRepository;
 
     @Autowired
-    private ProfileRepository profileRepository;
+    private FriendshipRepository friendshipRepository;
 
+     @Autowired
+    private ProfilePictureRepository pictureRepository;  
+    
     @Autowired
     private PhotoObjectRepository photoRepository; //luodaan gif=PhotoObjectRepository  prepository olio
 
@@ -51,29 +54,63 @@ public class PhotoObjectController {
         model.addAttribute("user", username);
         model.addAttribute("count", photos.size());
           
-        if(account.getProfiles().get(0).getProfilePicture() != null) {
-        PhotoObject p = account.getProfiles().get(0).getProfilePicture();
-        model.addAttribute("profilePicture", p.getDescription());
+//        if(account.getFriendships().get(0).getProfilePicture() != null) {
+//        PhotoObject p = account.getFriendships().get(0).getProfilePicture();
+//        model.addAttribute("profilePicture", p.getDescription());
 
-    }        return "photos";
+//    }      
+    return "photos";
     
     }
 
-    @GetMapping(path = "/photos2/{id}", produces = "image/*")//yksittäisenkuvan näyttö
-    public String getImage(Model model, @PathVariable Long id) {
+    
+     @GetMapping(value = "photos2/{id}",  produces = "image/*")//)//yksittäisen kuvan näyttö
+    public String getimages(Model model, @PathVariable Long id) {
+        Long imageCount = photoRepository.count();
 
-        model.addAttribute("count", photoRepository.count());
+        model.addAttribute("count", imageCount);
 
-//         if (photoRepository.count() > 1) {
-//                  model.addAttribute("next", (id + 1));
-//         }
+       // if (id >= 1L && id <= imageCount) {
+            model.addAttribute("current", id);
+       // }
+
+        if (id < imageCount && id > 0L) {
+            model.addAttribute("next", id + 1);
+        }
+
+        if (id > 1L) {
+            model.addAttribute("previous", id - 1);
+        }
+        
+            model.addAttribute("photos", photoRepository.findAll());
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+        Account user = accountRepository.findByUsername(username);
+        Account account = accountRepository.getOne(user.getId());
+        
+        List<PhotoObject> photos = accountRepository.findByUsername(username).getPhotos();
+        model.addAttribute("myphotos", photos);
+        model.addAttribute("user", username);
+        model.addAttribute("count", photos.size());
+//          
+//        if(account.getFriendships().get(0).getProfilePicture() != null) {
+//        PhotoObject p = account.getFriendships().get(0).getProfilePicture();
+//        model.addAttribute("profilePicture", p.getDescription());
+//        }
 //  
-        model.addAttribute("next", (id + 1));
-        model.addAttribute("previous", (id - 1));
-        model.addAttribute("current", (id));
-
-        return "photos";
+     return "photos";
     }
+    
+         
+    @GetMapping(path = "/photos2/{id}/content", produces = "image/*")
+    @ResponseBody
+    public byte[] getContent(@PathVariable Long id) {
+        return photoRepository.getOne(id).getContent();
+    }
+    
+    
+ 
 
 //vain kirjautunut käyttäjä voi tallentaa.jonka rooli..
     @PostMapping("/photos")
@@ -94,6 +131,125 @@ public class PhotoObjectController {
 
         return "redirect:/photos";
     }
+
+
+    @GetMapping(path = "/photos/{id}", produces = "image/*")//yksittäisen kuvan näyttö
+    @ResponseBody
+    public byte[] get(@PathVariable Long id) {
+        return photoRepository.getOne(id).getContent();
+
+    }
+    
+
+    @PutMapping("/photos/{id}/profilepicture")//yksittäisen kuvan näyttö
+    public String setProfilePicture(Model model, @PathVariable Long id) {
+        
+        System.out.println("pictureiiiiiiiiiidddddddddddddd"+id);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+        Account user=accountRepository.findByUsername(username);
+     
+//        PhotoObject pp = photoRepository.getOne(id);
+         ProfilePicture picture= new  ProfilePicture(); 
+         picture.setPictureId(id);
+         
+         if( user.getPicture()!=null){//jPoistetaan jos on edellinen profiilipicture
+        // pictureRepository.delete(user.getPicture());
+          user.getPicture().setPictureId(id);
+//         accountRepository.save(user);
+           }
+//         else{
+         pictureRepository.save(picture);
+         user.setPicture(picture);
+        accountRepository.save(user);
+//         }
+        return "redirect:/messages/photos/{id}";
+    }
+
+    
+     //poistaminen pitää kattoo kytkökset..
+    @DeleteMapping(path = "/photos/{id}")
+    public String delete(@PathVariable Long id) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+        Account account = accountRepository.findByUsername(username);
+        PhotoObject p = photoRepository.getOne(id);
+        //p.getUser().getPhotos().remove(p);
+      
+        account.getPhotos().remove(p);
+        accountRepository.save(account);
+        
+        
+//        System.out.println("photooid"+id);
+//        //PhotoObject foto = photoRepository.findById(id);
+//        PhotoObject f = photoRepository.getOne(id);
+//       //System.out.println("photoo"+f);
+//  
+        photoRepository.delete(p);
+
+        return "redirect:/photos";
+
+    }
+}
+
+  
+
+
+//
+//    @PutMapping("/photos/{id}/profilepicture")//yksittäisen kuvan näyttö
+//    public String setProfilePicture(Model model, @PathVariable Long id) {
+//        
+//        System.out.println("pictureiiiiiiiiiidddddddddddddd" + id);
+//        PhotoObject pp = photoRepository.getOne(id);
+//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//        String username = auth.getName();
+//        Account account=accountRepository.findByUsername(username);
+//        
+//         //ProfilePicture picture= photoRepository.getOne(id);
+//
+////       if(picture != null){ //jos on jo kuva edellinen poistetaan ennen lisäystä
+//         //profilePictureRepository.delete(picture); 
+//        // }
+//        //profilePictureRepository.save(picture);     //get all
+//        
+//       pp.setProfilePictureId(id);
+//       pp.setFriendship(account.getFriendships().get(0));
+//        photoRepository.save(pp);
+////       profile.setProfilePicture(pp);
+////        friendshipRepository.save(profile);
+//     
+//        return "redirect:/messages/photos/{id}/profilepicture";
+//    }
+//
+//
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//    @GetMapping(path = "/photos/{id}")//yksittäisen kuvan näyttö
+//    public ResponseEntity<byte[]> viewFile(@PathVariable Long id) {
+//        // PhotoObject f = foRepository.findOne(id);
+//        PhotoObject f = foRepository.getOne(id);
+//
+//        final HttpHeaders headers = new HttpHeaders();
+//       headers.setContentType(MediaType.parseMediaType(f.getContentType()));
+////        headers.setContentLength(f.getContentLength());
+//        return new ResponseEntity<>(f.getContent(), headers, HttpStatus.CREATED);
+//    }
 
 ////////    @PostMapping("/photos/{id}/profiles")
 ////////    public String saveProfilepicture(Model model, @PathVariable Long id) throws IOException {
@@ -118,55 +274,3 @@ public class PhotoObjectController {
 //////////       accountRepository.save(account);
 ////////        return "redirect:/photos";
 ////////    }
-    @GetMapping(path = "/photos/{id}", produces = "image/*")//yksittäisen kuvan näyttö
-    @ResponseBody
-    public byte[] get(@PathVariable Long id) {
-        return photoRepository.getOne(id).getContent();
-
-    }
-    
-////            // Get pyyntö kuvan tuottamiselle
-////    @GetMapping(path = "/photos/{photoId}", produces = "image/jpeg")
-////    @ResponseBody
-////    public byte[] getKuva(@PathVariable Long photoId) throws SQLException {
-////        return this.photoRepository.getOne(photoId).getContent();
-////    }
-
-    
-
-    @PostMapping("/photos/{id}/profilepicture")//yksittäisen kuvan näyttö
-    public String setProfilePicture(Model model, @PathVariable Long id) {
-        System.out.println("pictureiiiiiiiiiidddddddddddddd" + id);
-        PhotoObject pp = photoRepository.getOne(id);
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String username = auth.getName();
-        Profile profile=accountRepository.findByUsername(username).getProfiles().get(0);
-        profile.setProfilePicture(pp);
-        profileRepository.save(profile);
-        
-       
-        
-        return "redirect:/account/profile/{id}/profilepicture";
-    }
-
-//    @GetMapping(path = "/photos/{id}")//yksittäisen kuvan näyttö
-//    public ResponseEntity<byte[]> viewFile(@PathVariable Long id) {
-//        // PhotoObject f = foRepository.findOne(id);
-//        PhotoObject f = foRepository.getOne(id);
-//
-//        final HttpHeaders headers = new HttpHeaders();
-//       headers.setContentType(MediaType.parseMediaType(f.getContentType()));
-////        headers.setContentLength(f.getContentLength());
-//        return new ResponseEntity<>(f.getContent(), headers, HttpStatus.CREATED);
-//    }
-    //poistaminen pitää kattoo kytkökset..
-    @DeleteMapping(path = "/photos/{id}")
-    public String delete(@PathVariable Long id) {
-        // PhotoObject f = foRepository.findOne(id);
-        PhotoObject f = photoRepository.getOne(id);
-        photoRepository.delete(f);
-
-        return "redirect:/photos";
-
-    }
-}

@@ -1,6 +1,7 @@
 package projekti;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Entity;
@@ -17,20 +18,21 @@ import org.springframework.data.jpa.domain.AbstractPersistable;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Profile extends AbstractPersistable<Long> {
-    
-  
-    @OneToOne 
-    private PhotoObject profilePicture;
-    
+public class Friendship extends AbstractPersistable<Long> {
+      
+   
+   // private boolean accepted;
+    private LocalDateTime date;
     private String profileName;
-    @ManyToMany(mappedBy = "profiles")
+    @ManyToMany(mappedBy = "friendships")//tulisko tää sittenki toisinpäin..
     private List<Account>accounts = new ArrayList<>();
     //private Account user;    
    // private String identifier;
  // @ManyToMany
 //    private List<Friend> friends; //= new ArrayList<>();
-
+//    @OneToOne 
+//    private PhotoObject profilePicture;
+//    
 
 }
 //import javax.persistence.ManyToOne;
@@ -39,7 +41,7 @@ public class Profile extends AbstractPersistable<Long> {
 // *
 // * @author svsv
 // */
-//public class Profile {
+//public class Friendship {
 //
 //    // @ManyToOne
 //    //private Account user;    

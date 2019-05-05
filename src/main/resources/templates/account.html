@@ -1,103 +1,108 @@
 <!DOCTYPE HTML>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
     <head>
-        <title th:text="${account.id}">Account id</title>
+        <title th:text="${account.username}">Account id</title>
     </head>
- 
+
+
     <body>
         <div th:replace="fragments/layout :: header"></div>
-      
-        <h1 th:text="${'Account ' + account.id+ account.name}">Tilin tunnus</h1>
- 
- 
-        <!--    <div th:text="${photo.}">description>
-                  
- 
-            
-             <h2>profile:</h2>
-            <h1  th:text="${'Profile: ' +profile}">profile</h1>
-    <h1  th:text="${profilePicture}">profile</h1> 
-    -->
+        <h1> <span th:text="${username}">username</span>'s Account and friends</h1>
+        <h1 th:text="${'Account '+ account.username+account.id}">Tilin tunnus</h1>
 
-                 
-        <h2>profile picture:</h2>
-            <h1  th:text="${profilePicture}">profile</h1>        
-            
-          <h2>Your friends:</h2>
-        
+
+        <h2>Your Friends:</h2>
         <ol>
-            <li th:each="profile: ${account.profiles}">
-                <span th:text="${profile.profileName}">Kaverinnimi</span>
+            <li th:each="uf: ${userfriends}">
+                <span th:text="${uf.username}">Kaverinnimi</span> and
+                <span th:text="${uf.friendname}">Kaverinnimi</span> are friends now
+
+            </li>
+            <li th:each="f: ${friendusers}">
+                <span th:text="${f.username}">Kaverinnimi</span> on kaverisi
+
+
+            </li>
+        </ol> 
+
+
+
+        <h2>Accept friendship requests</h2>
+
+        <!--tiettyyn profiiliiin liiityvät accountita-->
+        <ol>
+            <li th:each="account: ${ap}">
+                <span th:text="${account.username}">Kaverinnimi</span>
+                <form th:action="@{/accounts/{id}/accept(id=${account.id})}" method="POST">
+                    <input type="submit" th:value="${'Accept ' + account.username}"/>
+                </form>
+
+
+                <!-- TODO poisto-->
+
             </li>
         </ol>
-          
-           <!--    <h2>Your friendsssssssss</h2> 
+
+
+          <fieldset>
+
+        <h2>Search from all users</h2>      
+        <!-- TODO haku regularexpr-->
+
+
+        <form name="f" method="POST" th:action="@{/accounts/search}">
        
-        <ul>
-            <li th:each="friend: ${friends}">
-                <span th:text="${friend.profileName}">Kaverinnimi</span>
-            </li>
-        </ul>-->
-    
-     
-    <h2>Add new friend</h2>
-        <ul>
-         <li th:each="profile : ${profiles}">
-                <form th:action="@{/account/{id}/profiles/{profileId}(id=${account.id},profileId=${profile.id})}" method="POST">
-                    <input type="submit" th:value="${'Add friend ' + profile.profileName}"/>
+         <!--  <legend>Haku-->
+            <div class="">
+                Search:  <input type="text" name="searched"/>
+            </div>
+
+            <div class="form-actions" >
+                <button class="btn-success" type="submit">Hae</button>
+            </div>
+           <!--  </legend>-->
+  
+        </form>
+
+
+        <a th:href="@{/account/{id}(id=${searched.id})}">
+            <p th:text="${searched.username}">msg</p>
+        </a>
+        <form th:action="@{/accounts/{id}/add(id=${searched.id})}" method="POST">    <!--luodaan frienship/profiili/-->
+            <input type="submit" th:value="${'Send friendship request'}"/>
+        </form>
+  </fieldset>
+
+
+        <h2>Add new friend request:</h2> 
+        <ol>
+            <li th:each="account : ${accounts}">
+                <a th:href="@{/account/{id}(id=${account.id})}">
+
+                    <p th:text="${account.username}">msg</p>
+                    name:   <span th:text="${account.name}">msg</span>
+                    <!-- Profile name identifier<span th:text="${account.identifier}">msg</span>-->
+                    password: <span th:text="${account.password}">msg</span> 
+                    account: <span th:text="${account.id}">tilin id</span>, 
+                    Friends: <span th:text="${account.friendships.size()}">amount</span>  </a>
+                <form th:action="@{/accounts/{id}/add(id=${account.id})}" method="POST">    <!--luodaan frienship/profiili/-->
+                    <input type="submit" th:value="${'Send friendship request to ' + account.username +  account.id +' by '+username}"/>
                 </form>
             </li>
-        </ul>
-    
-    
-    <h2>All profiles</h2>
+        </ol>
+
+
+
+        <h2>All profiles</h2>
         <ol>
-            <li th:each="profile : ${profiles}">
-                 Profile name<span th:text="${profile.profileName}">msg</span>
+            <li th:each="friend : ${friendships}">
+                Profile name<span th:text="${friend.profileName}">msg</span>
             </li>
         </ol>
-    
-    
+
+
     </body>
 </html>
-
-
-
-
-<!--<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-    <head>
-        <meta charset="UTF-8" />
-        <title th:text="${person.name}">JCVD</title>
-    </head>
-    <body>
-
-        <h1>User <span th:text="${person.name}">JCVD</span></h1>
-
-        <h2>Friends</h2>
-
-        <div>
-            <ul>
-                <li th:each="friend : ${person.friends}" th:text="${friend.name}"></li>
-            </ul>
-        </div>
-
-        <div th:if="${not #lists.isEmpty(friends)}">
-
-            <h2>Assign to friend</h2>
-
-            <form method="POST" th:action="@{/persons/{personId}/friends(personId=${person.id})}">
-                <select name="friendId">
-                    <option th:each="friend : ${friends}" th:value="${friend.id}" th:text="${friend.name}">movie</option>
-                </select>
-                <input type="submit" value="Assign" id="add-to-friend"/>
-            </form>
-        </div>
-
-        <div><a href="/persons">Persons</a></div>
-
-    </body>
-
-</html>-->
 
 
 

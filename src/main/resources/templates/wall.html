@@ -6,15 +6,17 @@
     </head>
     <body>
         <div th:replace="fragments/layout :: header"></div>
-
-        <ol>
-         <li th:each="message : ${messages}">
-        <h1> <span th:text="${message.user.username}">username</span>'s wall</h1>
-           <!--<span th:text="${message.photo.content}">username</span>-->
-
-         </li>
-        </ol>
-        <p>TODO profilepicture</p>
+        
+         <h1> <span th:text="${username}">username</span>'s wall</h1>
+           <h2>profile picture:</h2>
+          
+          <!-- <h1  th:text="${profilePicture}">profile</h1> -->
+         
+        <div th:if="${current != null}">
+            <img th:src="@{ /messages/photos/{id}/content(id=${current})}" width=auto height=300/>
+   
+        </div>
+ 
         <p>TODO tykkäysnappulat kuvaan ja viesteihin</p>
         <p>TODO kommentointi kuvaan ja viesteihin</p>
         <!--Kommentointi tapahtuu viestin ja kuvan yhteydessä olevan kommentointikentän avulla. 

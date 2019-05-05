@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import java.time.LocalDateTime;
+import org.springframework.web.bind.annotation.DeleteMapping;
 
 @Controller
 public class AccountController {
@@ -64,7 +65,7 @@ public class AccountController {
         Account user = accountRepository.findByUsername(username);
         // Account account = accountRepository.getOne(user.getId());
         Account account = accountRepository.findByUsername(username);
- 
+
         List<Friendship> friends = user.getFriendships();
         List<Friendship> af = new ArrayList();
 
@@ -82,25 +83,25 @@ public class AccountController {
             }
 
             List<Friend> afriends = user.getFriends();
-             List<Friend> userfriends =account.getFriends();//Userinkvetit
-            
-            List<Account>friendusers =new ArrayList();
-            if(friendRepository.findByusername(username)!=null){
-            friendusers = friendRepository.findByusername(username).getAccounts();  
-              }
-            
-            Account searched= accountRepository.getOne(id);
-            
-               model.addAttribute("searched", searched);
-              model.addAttribute("friendusers", friendusers);
-              model.addAttribute("userfriends", userfriends);
+            List<Friend> userfriends = account.getFriends();//Userinkvetit
+
+            List<Account> friendusers = new ArrayList();
+            if (friendRepository.findByusername(username) != null) {
+                friendusers = friendRepository.findByusername(username).getAccounts();
+            }
+
+            Account searched = accountRepository.getOne(id);
+
+            model.addAttribute("searched", searched);
+            model.addAttribute("friendusers", friendusers);
+            model.addAttribute("userfriends", userfriends);
             model.addAttribute("af", af);
             model.addAttribute("account", account);
             model.addAttribute("accounts", accounts);
             model.addAttribute("friends", friends);
             // model.addAttribute("userfriends", userfriends);
             model.addAttribute("ap", ap);
-       
+
             model.addAttribute("friendships", friendshipRepository.findAll());
             model.addAttribute("allfriends", friendRepository.findAll());
             model.addAttribute("afriends", afriends);
@@ -109,7 +110,7 @@ public class AccountController {
         if (accounts.contains(user)) {
             accounts.remove(user);
         }
-   
+
         model.addAttribute("af", af);
         model.addAttribute("account", account);
         model.addAttribute("accounts", accounts);
@@ -120,11 +121,7 @@ public class AccountController {
 
         return "account";
     }
-    
-    
-    
-    
-    
+
     //  get all user's  friends 
     @GetMapping("/account/friendships")
     public String getfriends(Model model) {
@@ -132,7 +129,7 @@ public class AccountController {
         String username = auth.getName();
         Account user = accountRepository.findByUsername(username);
         Account account = accountRepository.getOne(user.getId());
-    
+
         List<Friendship> friends = user.getFriendships();
         List<Friendship> af = new ArrayList();
 
@@ -150,24 +147,24 @@ public class AccountController {
             }
 
             List<Friend> afriends = user.getFriends();
-             List<Friend> userfriends =account.getFriends();//Userinkvetit
-            
-            List<Account>friendusers =new ArrayList();
-            if(friendRepository.findByusername(username)!=null){
-            friendusers = friendRepository.findByusername(username).getAccounts();  
-              }
-            
-            Account searched=new Account();
-            
-               model.addAttribute("searched", searched);
-              model.addAttribute("friendusers", friendusers);
-              model.addAttribute("userfriends", userfriends);
+            List<Friend> userfriends = account.getFriends();//Userinkvetit
+
+            List<Account> friendusers = new ArrayList();
+            if (friendRepository.findByusername(username) != null) {
+                friendusers = friendRepository.findByusername(username).getAccounts();
+            }
+
+            Account searched = new Account();
+
+            model.addAttribute("searched", searched);
+            model.addAttribute("friendusers", friendusers);
+            model.addAttribute("userfriends", userfriends);
             model.addAttribute("af", af);
             model.addAttribute("account", account);
             model.addAttribute("accounts", accounts);
             model.addAttribute("friends", friends);
             model.addAttribute("ap", ap);
-      
+
             model.addAttribute("friendships", friendshipRepository.findAll());
             model.addAttribute("allfriends", friendRepository.findAll());
             model.addAttribute("afriends", afriends);
@@ -176,7 +173,7 @@ public class AccountController {
         if (accounts.contains(user)) {
             accounts.remove(user);
         }
- 
+
         model.addAttribute("af", af);
         model.addAttribute("account", account);
         model.addAttribute("accounts", accounts);
@@ -187,8 +184,6 @@ public class AccountController {
 
         return "account";
     }
-    
-     
 
     //creates account and frienship
     @PostMapping("/accounts")
@@ -270,241 +265,45 @@ public class AccountController {
             friendRepository.save(f);
         }
 
-       // if (friendRepository.findByusername(friendAccount.getUsername()) != null) {//jos on   
+        // if (friendRepository.findByusername(friendAccount.getUsername()) != null) {//jos on   
+        Friend f = friendRepository.findByusername(friendAccount.getUsername()); //kaveri haetaaan
 
-            Friend f = friendRepository.findByusername(friendAccount.getUsername()); //kaveri haetaaan
+        if (!userAccount.getFriends().contains(f)) {//jos ei oo  userin lisassa kaverina lisätään sinne
+            System.out.println("lisätään uusi kaveri nimikaverilistalle");
+            userAccount.getFriends().add(f);//lisätään userin listalle kaveri     
+            accountRepository.save(userAccount);
+            f.getAccounts().add(userAccount);
+            friendRepository.save(f);
 
-            if (!userAccount.getFriends().contains(f)) {//jos ei oo  userin lisassa kaverina lisätään sinne
-                System.out.println("lisätään uusi kaveri nimikaverilistalle");
-                userAccount.getFriends().add(f);//lisätään userin listalle kaveri     
-                accountRepository.save(userAccount);
-                f.getAccounts().add(userAccount);
-                friendRepository.save(f);
+        } else {
+            System.out.println("kaveri on jo");
+        }
 
-            } else {
-                System.out.println("kaveri on jo");
-            }
-
-      //  }
+        //  }
 //            userAccount.getFriendships().remove(f);//poistetaan kaveripyyntö
 //            accountRepository.save(userAccount);
 //             
 //       Friendship accepted=friendshipRepository.findByprofileName(friendAccount.getUsername());
 //       friendAccount.getFriendships().remove(accepted);
 //       accountRepository.save(friendAccount);
-
         return "redirect:/account/friendships";
     }
 
-    
-    
-    
     @PostMapping("/accounts/search")
     public String searchUser(@RequestParam String searched) {
-        
-    Account user = accountRepository.findByUsername(searched);
-            return "redirect:/accounts/friendships/"+user.getId();
+
+        Account user = accountRepository.findByUsername(searched);
+        return "redirect:/accounts/friendships/" + user.getId();
 
     }
 
+    @DeleteMapping(path = "/account/{id}/delete")
+    public String deleteAccount(@PathVariable Long id) {
+        Account account = accountRepository.getOne(id);
+
+        accountRepository.delete(account);
+
+        return "redirect:/logout";
+
+    }
 }
-
-
-
-
-
-
-
-
-//        Account a = accountRepository.getOne(id);
-//        String profilename=a.getProfilename();
-//        Friendship friend=friendshipRepository.findByprofileName(profilename);
-// account.setAccepted(true);
-//delete from requests and add to friend list
-//create accepted friend!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-////////    //  get all user's  friends 
-////////    @GetMapping("/account/friendships")
-////////    public String getfriends(Model model) {
-////////        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-////////        String username = auth.getName();
-////////        Account user = accountRepository.findByUsername(username);
-////////        Account account = accountRepository.getOne(user.getId());
-////////        
-////////        
-////////        
-////////        List<Friendship> friends = account.getFriendships();
-////////        List<Friendship> af = new ArrayList();
-////////
-////////        Friendship frienship = user.getFriendships().get(0);
-////////        if (frienship.getAccounts() != null) {
-////////            List<Account> ap = frienship.getAccounts();//kaikki tilit jotkaovat kyseisen profiilin ysäväksihakeneet
-////////
-////////            for (Friendship friend : friends) {
-////////                if (friend.isAccepted()) {
-////////                    af.add(friend);
-////////                }
-////////            }
-////////            model.addAttribute("af", af);
-////////            model.addAttribute("account", account);
-////////            model.addAttribute("accounts", accountRepository.findAll());
-////////            model.addAttribute("friends", friends);
-////////            model.addAttribute("ap", ap);
-////////            model.addAttribute("friendships", friendshipRepository.findAll());
-////////
-////////        }
-////////        model.addAttribute("af", af);
-////////        model.addAttribute("account", account);
-////////        model.addAttribute("accounts", accountRepository.findAll());
-////////        model.addAttribute("friends", friends);
-////////        // model.addAttribute("ap", ap);
-////////        model.addAttribute("friendships", friendshipRepository.findAll());
-////////        model.addAttribute("username", username);
-////////
-//////////        if(account.getProfiles().get(0).getProfilePicture() != null) {
-//////////        PhotoObject p = account.getProfiles().get(0).getProfilePicture();
-//////////        model.addAttribute("profilePicture", p.getDescription());
-//////////        }
-////////        return "account";
-////////    }
-//        @GetMapping("/account/{id}/accept")
-//    public String approvedFirends(Model model,  @PathVariable Long id) {
-//        
-//        List<Profile> af= account.getProfiles();
-//
-//        
-//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//        String username = auth.getName();
-//        Account user = accountRepository.findByUsername(username);
-//        Account account = accountRepository.getOne(user.getId());
-//        List<Profile> friends = account.getProfiles();
-//        
-//        Friendship friendship=user.getProfiles().get(0);
-//        List<Account> ap = friendship.getAccounts();//kaikki tilit jotkaovat kyseisen profiilin ysäväksihakeneet
-//
-//        model.addAttribute("account", account);
-//        model.addAttribute("accounts", accountRepository.findAll());
-//        model.addAttribute("friends", friends);
-//        model.addAttribute("ap", ap);
-//        model.addAttribute("profiles", friendshipRepository.findAll());
-//        model.addAttribute("acceptedfriends", af);
-//
-//             return "account";
-//    }
-////////      @PostMapping("/account/{id}/accept")
-////////    public String approve(Model model,  @PathVariable Long id) {
-////////        
-////////        Account account=accountRepository.getOne(id);
-////////        //account.setAccepted(true);
-////////        accountRepository.save(account);
-//////////        Friendship prof=friendshipRepository.getOne(id);
-//////////        prof.setAccepted(true);
-//////////        friendshipRepository.save(prof);
-////////     
-////////        
-//////////        if(account.getProfiles().get(0).getProfilePicture() != null) {
-//////////        PhotoObject p = account.getProfiles().get(0).getProfilePicture();
-//////////        model.addAttribute("profilePicture", p.getDescription());
-//////////        }
-////////        
-////////       return "redirect:/account/friendships";
-////////    }
-////////
-////////    //  Add friends to account
-////////    @Transactional
-////////    @PostMapping("/account/{accountId}/friendships/{friendshipId}")
-////////    public String addFriend(@PathVariable Long accountId, @PathVariable Long friendshipId) {
-////////
-////////        //samaa kaveria ei lisätä useasti
-////////        Account account = accountRepository.getOne(accountId);
-////////        Friendship friendship = friendshipRepository.getOne(friendshipId);
-//////////        List<Profile> profiles = account.getProfiles();  
-//////////        
-//////////    //jos on jo kaveri, ei lisätä
-//////////        if (profiles.size() > 0) {
-//////////            for (Friendship p : profiles) {
-//////////                 if (p.getProfileName().equalsIgnoreCase(friendship.getProfileName())) {
-//////////                    System.out.println("on jo kaverisi");  
-//////////              break;
-//////////            } 
-//////////            }
-////////
-////////        //jos ei ole kaveri, lisätään kaveriksi   
-////////        if (!account.getFriendships().contains(friendship)) {
-////////            System.out.println("lisätään kaveriksi");
-////////            friendshipRepository
-////////                    .getOne(friendshipId)
-////////                    .getAccounts().add(accountRepository.getOne(friendshipId));
-////////            accountRepository
-////////                    .getOne(accountId).getFriendships().add(friendshipRepository.getOne(friendshipId));
-////////        } else {
-////////            System.out.println("on jo kaverisi");
-////////        }
-////////        //return "redirect:/account/"+ accountId;
-////////        return "redirect:/account/friendships";
-////////    }
-////////    
-////////    
-//          @GetMapping("/account/profile/{id}/profilepicture")//yksittäisen kuvan näyttö
-//         public String  getProfilePicture(Model model, @PathVariable Long id) {
-//         System.out.println("iiiiiiiiiidddddddddddddd"+id);
-//         //PhotoObject pp=photoRepository.getOne(id);
-//    // pp.setProfile(friendship);
-//          model.addAttribute("photos", photoRepository.findAll());
-//
-//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//        String username = auth.getName();
-//       // List<PhotoObject> photos = accountRepository.findByUsername(username).getPhotos();
-//      
-//       // model.addAttribute("profilePicture",pp.getDescription());
-//      
-//        Account user = accountRepository.findByUsername(username);
-//        Account account = accountRepository.getOne(user.getId());
-//        List<Profile> friends = account.getProfiles();
-//        
-//        PhotoObject p = account.getProfiles().get(0).getProfilePicture();
-//        model.addAttribute("profilePicture",p.getDescription());
-//       
-//        
-//        model.addAttribute("account", account);
-//        model.addAttribute("accounts", accountRepository.findAll());
-//        model.addAttribute("friends", friends);
-//        model.addAttribute("profiles", friendshipRepository.findAll());
-//        
-//        
-//     
-//        return "account";
-//    }
-//}
-//       @GetMapping("account/profiles/{Profiled}/photos")
-//    public String getProfilepicture(Model model, @PathVariable Long id) {
-//    
-//        //model.addAttribute("friendship", friendshipRepository.getOne(id));
-//        model.addAttribute("profilePicture", friendshipRepository.getOne(id).getProfilePicture() );
-//  
-//        model.addAttribute("profiles", friendshipRepository.findAll());
-//
-//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//        String username = auth.getName();
-//        Account user = accountRepository.findByUsername(username);
-//        Account account = accountRepository.getOne(user.getId());
-//        model.addAttribute("account", account);
-//        
-//
-//        
-//  Authentication auth = SecurityContextHolder.getContext().getAuthentication();   
-//        String username = auth.getName();
-//        Account user = accountRepository.findByUsername(username);
-//        Account account = accountRepository.getOne(user.getId());
-//          List<Profile>profiles= account.getProfiles();
-//   
-//          for (Friendship p : profiles) {
-//                if (p.getAccounts().equals(account)) {
-//                    System.out.println("tämä on userin friendship");  
-//                   pPicture= p.getProfilePicture();
-//                    System.out.println(" p.getProfilePicture();");
-//                }
-//          }
-//        return "account";
-//    }
-//      
-//}

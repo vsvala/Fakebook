@@ -2,6 +2,7 @@ package projekti;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
@@ -26,8 +27,10 @@ public class Account extends AbstractPersistable<Long> {
    @Size(min = 3, max = 30)
     private String profilename;
    
-   @Size(min = 3, max = 30)
-    private String username;
+  
+   @Size(min = 3, max = 30) 
+   //@Column(unique = true)
+   private String username;
 
   @Size(min = 3, max = 100)
    private String password;

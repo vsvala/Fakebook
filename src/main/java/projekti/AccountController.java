@@ -189,11 +189,12 @@ public class AccountController {
         if (bindingResult.hasErrors()) {
             return "accounts";
         }
-//        if (accountRepository.findByUsername(username) != null) {
-//            return "redirect:/accounts";
-
+    if (accountRepository.findByUsername(username) != null | username.isEmpty() ) {//jos tyhjä tai on jo
+        System.out.println("tyhjä tai username on jo");
+        return "redirect:/accounts";
+      }
         //creating account
-        account = new Account();
+        //account = new Account();
         account.setName(name);
         account.setUsername(username);
         account.setPassword(passwordEncoder.encode(password));

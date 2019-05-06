@@ -31,7 +31,7 @@ public class Account extends AbstractPersistable<Long> {
     private List<Friend> friends;;
     
     @OneToMany// @Size( min=0,max=10)
-    private List<PhotoObject>photos= new ArrayList<>();
+    private List<PhotoObject>photos;
  
     @OneToOne 
     private ProfilePicture picture;

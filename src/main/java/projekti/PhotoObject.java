@@ -24,11 +24,12 @@ public class PhotoObject extends AbstractPersistable<Long> {
     
     
     
-   // @Lob //poistoon herokun takia
-  //  @Basic(fetch = FetchType.LAZY) 
+ 
+  //  @Basic(fetch = FetchType.LAZY)   //poistoon herokun takia myös lob
+    @Lob 
     private byte[] content;
     private String description;
-    private Long profilePictureId;
+    //private Long profilePictureId;
     @ManyToOne
     private Account user; //id  
 

@@ -5,35 +5,13 @@
         <title th:text="${otsikko}">Title</title>
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"/>
-        <link rel="stylesheet" th:href="@{/public/style.css}"/>
     </head>
 
     <body>
         <header th:fragment="header">
 
-            <!--  <nav>
-                  <ul>
-                      <li>
-                          <a th:href="@{/}">Main page</a>
-                      </li>
-                      <li>
-                          <a th:href="@{/accounts}">Register</a>
-                      </li>
-                      <li>
-                          <a th:href="@{/persons}">Persons</a>
-                      </li>
-                      <li>
-                          <a th:href="@{/photos}">Picture album</a>
-                      </li>
-                      <li>
-                          <a th:href="@{/messages}">Wall</a>
-                      </li>
-                  </ul>
-              </nav>-->
-
-
             <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-                  <a class="navbar-brand" href="#">Fakebook</a>
+                <a class="navbar-brand" href="#">Fakebook</a>
                 <div> 
                     <a th:href="@{/index}">Home</a> | 
 
@@ -44,32 +22,22 @@
                         <a th:href="@{/account/friendships}">Friends</a> |
 
 
-                        <a th:href="@{/photos}">Pictures</a>|
+                        <a th:href="@{/photos}">Pictures</a> |
+                    </span> 
+
+                    <span  sec:authorize="isAuthenticated()">
+
+                        <a href="/logout" th:href="@{/logout}" class="btn-logout">Logout  </a>
+                    </span> 
 
 
-                        <!--    <a href="/logout">logout</a>
-                       <form th:action="@{/logout}" method="POST">
-                        <input type="submit" value="Logout"></input>
-                        </form>-->
-               
+                    <span sec:authorize="isAnonymous()">
+                        <a th:href="@{/accounts}">Register  </a> |
 
-             
-                </span> 
-                <span  sec:authorize="isAuthenticated()">
-
-                    <a href="/logout" th:href="@{/logout}" class="btn-logout">Logout  </a>
-                </span> 
-                <!-- Show login link only for anonymous users -->
-               
-                
-                <span sec:authorize="isAnonymous()">
-                    <a th:href="@{/accounts}">Register  </a> |
-
-                    <a href="/login" th:href="@{/login}" class="btn-login">Login  </a>
-                </span>
-            </div> 
+                        <a href="/login" th:href="@{/login}" class="btn-login">Login  </a>
+                    </span>
+                </div> 
             </nav>
-
         </header>
 
 
@@ -83,7 +51,10 @@
         <footer th:fragment="footer">
             &copy; Epic web developers paid by the hour!
         </footer>
-
+        <!--    <a href="/logout">logout</a>
+       <form th:action="@{/logout}" method="POST">
+        <input type="submit" value="Logout"></input>
+        </form>-->
 
 
 

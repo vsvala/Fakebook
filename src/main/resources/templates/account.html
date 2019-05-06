@@ -7,10 +7,11 @@
     <body>
         <div th:replace="fragments/layout :: header"></div>
         
-           <div class="container"> 
-        
-        <h1> <span th:text="${username}">username</span>'s Account and friends</h1>
-        <h1 th:text="${'Account '+ user.username+user.id}">Tilin tunnus</h1>
+           </br>
+              <main>
+            <section class="container">
+        <h1> <span th:text="${username}">username</span>'s friends <span th:text="${user.id}">Tilin tunnus</span></h1>
+       
 
 
         
@@ -20,7 +21,7 @@
             <li th:each="uf: ${userfriends}">
                 <span th:text="${uf.username}">Kaverinnimi</span> and
                 <span th:text="${uf.friendname}">Kaverinnimi</span> are friends now
-
+                
                 
             </li>
             <li th:each="f: ${friendusers}">
@@ -32,8 +33,9 @@
 
 
 
-        <h2>Accept friendship requests</h2>
-
+        <h2>Accept friendship requests:</h2>
+        <div th:if="${frequests.empty}"></div>
+           <p colspan="4">No requests yet</p>
         <!--tiettyyn profiiliiin liiityvät accountita
         <div th:if="${frequests ==null }">-->
         <ol>
@@ -42,11 +44,11 @@
                 
                 
                 <form th:action="@{/accounts/{id}/accept(id=${account.id})}" method="POST">
-                    <input type="submit" th:value="${'Accept ' + account.username}"/>
+                    <input type="submit" class="btn btn-primary" th:value="${'Accept ' + account.username}"/>
                 </form>
-
+            </br>
                   <form th:action="@{/accounts/{id}/reject(id=${account.id})}" method="DELETE">
-                    <input type="submit" th:value="${'Dont accept ' + account.username}"/>
+                    <input type="submit" class="btn btn-danger" th:value="${'Dont accept ' + account.username}"/>
                 </form>
               
             </li>
@@ -62,11 +64,11 @@
        
          <!--  <legend>Haku-->
             <div class="">
-                Search:  <input type="text" name="searched"/>
+                Search:  <input  class="form-control col-sm-5" type="text" name="searched"/>
             </div>
-
+  </br>
             <div class="form-actions" >
-                <button class="btn-success" type="submit">Hae</button>
+                <button class="btn btn-primary" type="submit">Hae</button>
             </div>
            <!--  </legend>-->
   
@@ -75,18 +77,19 @@
          <!--show add button only if finds -->
         <div th:if="${searched.username != null}">
         <a th:href="@{/account/{id}(id=${searched.id})}">
-            <p th:text="${searched.username}">msg</p>
+         <p th:text="${searched.username}">msg</p>
         </a>
         
        
-        <form th:action="@{/accounts/{id}/add(id=${searched.id})}" method="POST">    <!--luodaan frienship/profiili/-->
-            <input type="submit" th:value="${'Send friendship request'}"/>
+        <form class="form"  th:action="@{/accounts/{id}/add(id=${searched.id})}" method="POST">    <!--luodaan frienship/profiili/-->
+            <input type="submit"   class="btn btn-secondary" th:value="${'Send friendship request'}"/>
         </form></div>
   
-  </fieldset>
+        </fieldset>
 
-
+           </br>
         <h2>Add new friend request:</h2> 
+        
         <ol>
             <li th:each="account : ${accounts}">
                 <a th:href="@{/account/{id}(id=${account.id})}">
@@ -100,7 +103,7 @@
                    </a> 
                 <!-- sending friendship request -->
                 <form th:action="@{/accounts/{id}/add(id=${account.id})}" method="POST">    <!--luodaan frienship/profiili/-->
-                    <input type="submit" th:value="${'Send friendship request to ' + account.username +  account.id +' by '+username}"/>
+                    <input type="submit"  class="btn btn-primary"  th:value="${'Send friendship request to ' + account.username +  account.id +' by '+username}"/>
                 </form>
             </li>
         </ol>
@@ -118,7 +121,8 @@
         </ol>
 
      <form th:action="@{/account/{id}/delete(id=${user.id})}" th:method="delete"><input type="submit" value="Delete account"/></form>
-    </div>
+    </section>
+              </main>
     </body>
 </html>
 

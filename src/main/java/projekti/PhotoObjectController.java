@@ -37,18 +37,13 @@ public class PhotoObjectController {
     private ProfilePictureRepository ppictureRepository;  
     
     @Autowired
-    private PhotoObjectRepository photoRepository; //luodaan gif=PhotoObjectRepository  prepository olio
+    private PhotoObjectRepository photoRepository; 
 
     @GetMapping("/photos")
     public String redirect(Model model) {
-
-     
-
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
-        Account user = accountRepository.findByUsername(username);
-       // Account account = accountRepository.getOne(user.getId());
-       
+        Account user = accountRepository.findByUsername(username);       
        
         model.addAttribute("photos", photoRepository.findAll());
         List<PhotoObject> photos = accountRepository.findByUsername(username).getPhotos();
@@ -60,8 +55,8 @@ public class PhotoObjectController {
     
     }
 
-    
-     @GetMapping(value = "photos2/{id}",  produces = "image/*") //)//yksittäisen kuvan näyttö
+    //TODO Image slides
+     @GetMapping(value = "photos2/{id}",  produces = "image/*")
     public String getimages(Model model, @PathVariable Long id) {
         Long imageCount = photoRepository.count();
 
@@ -78,9 +73,6 @@ public class PhotoObjectController {
         if (id > 1L) {
             model.addAttribute("previous", id - 1);
         }
-        
-
-        
             model.addAttribute("photos", photoRepository.findAll());
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -102,9 +94,17 @@ public class PhotoObjectController {
     public byte[] getContent(@PathVariable Long id) {
         return photoRepository.getOne(id).getContent();
     }
- 
+    
+    
+  @GetMapping(path = "/photos/{id}", produces = "image/*")
+    @ResponseBody
+    public byte[] get(@PathVariable Long id) {
+        return photoRepository.getOne(id).getContent();
 
-//vain kirjautunut käyttäjä voi tallentaa.jonka rooli..
+    }
+
+    
+//Add photos
     @PostMapping("/photos")
     public String savePhoto(@RequestParam("file") MultipartFile file, @RequestParam String description) throws IOException {
         PhotoObject p = new PhotoObject();
@@ -124,12 +124,7 @@ public class PhotoObjectController {
         return "redirect:/photos";
     }
 
-    @GetMapping(path = "/photos/{id}", produces = "image/*")//yksittäisen kuvan näyttö
-    @ResponseBody
-    public byte[] get(@PathVariable Long id) {
-        return photoRepository.getOne(id).getContent();
-
-    }
+   
   
     
     @DeleteMapping(path = "/photos/{id}")

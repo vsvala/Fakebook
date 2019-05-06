@@ -22,7 +22,7 @@ import org.springframework.data.jpa.domain.AbstractPersistable;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Wall extends AbstractPersistable<Long> { //creates id
+public class Wall extends AbstractPersistable<Long> { 
     
           @OneToOne
           private Account user;

@@ -7,6 +7,5 @@ import org.springframework.data.repository.query.Param;
 
 public interface FriendRepository extends JpaRepository<Friend, Long> {
   Friend findByusername(String username);
- // Friend findByusernameTo(String username);
 
 }

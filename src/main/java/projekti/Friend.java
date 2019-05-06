@@ -26,7 +26,7 @@ import org.springframework.data.jpa.domain.AbstractPersistable;
 @AllArgsConstructor
 public class Friend extends AbstractPersistable<Long>{
 //    
-    @ManyToMany(mappedBy = "friends")//tulisko tää sittenki toisinpäin..
+    @ManyToMany(mappedBy = "friends")
     private List<Account>accounts = new ArrayList<>();
     @Column(unique=true)
     private String username;

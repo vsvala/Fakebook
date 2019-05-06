@@ -54,69 +54,6 @@ public class FriendshipController {
         return "friendship";
     }
     
-     
-//    @GetMapping("account/profiles/{id}/photos")
-//    public String getProfilepicture(Model model, @PathVariable Long id) {
-//    
-//        model.addAttribute("friendship", friendshipRepository.getOne(id));
-//        model.addAttribute("profilePicture", friendshipRepository.getOne(id).getProfilePicture() );
-// 
-//        
-//        
-//        
-//        model.addAttribute("friendships", friendshipRepository.findAll());
-//
-//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//        String username = auth.getName();
-//        Account user = accountRepository.findByUsername(username);
-//        Account account = accountRepository.getOne(user.getId());
-//        model.addAttribute("account", account);
-//
-//        
-//        
-//     
-//   //  Authentication auth = SecurityContextHolder.getContext().getAuthentication();   
-////        String username = auth.getName();
-////        Account user = accountRepository.findByUsername(username);
-////        Account account = accountRepository.getOne(user.getId());
-////          List<Profile>friendships= account.getProfiles();
-////   
-////          for (Friendship p : friendships) {
-////                if (p.getAccounts().equals(account)) {
-////                    System.out.println("tämä on userin friendship");  
-////                   pPicture= p.getProfilePicture();
-////                    System.out.println(" p.getProfilePicture();");
-////                }
-////          }
-//        return "account";
-//    }
-    
-    
-//    @PostMapping("/profiles/photos/{id}")
-//    public String chooseProfilePicture(@PathVariable Long id) {
-//         PhotoObject profilePicture = photoRepository.getOne(id);
-//         Long profileId=9L;
-//         
-//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//        String username = auth.getName();
-//        Account user = accountRepository.findByUsername(username);
-//        Account account = accountRepository.getOne(user.getId());
-//          List<Profile>friendships= account.getProfiles();
-//   
-//          for (Friendship p : friendships) {
-//                if (p.getAccounts().equals(account)) {
-//                    System.out.println("tämä on userin account, aseta kuva");  
-//                    p.setProfilePicture(profilePicture);
-//                   id=p.getId();
-//              break;
-//            }
-//               }
-//        // id=  profileId;
-//        return "redirect:/accounts/photos/{id}";
-//      //  return "friendship";
-//    }
-
-    //
     @PostMapping("/friendships")
     public String createProfile() { //(@RequestParam String profileName)//frienship
 
@@ -129,7 +66,7 @@ public class FriendshipController {
         //tässä laitetaan nimeksi profiilin tunnus
         List<Friendship> friendships = account.getFriendships();     
         
-    //jos profiili jo olemassa ei luoda toista
+        //jos profiili jo olemassa ei luoda toista
         if (friendships.size() > 0) {
             for (Friendship p : friendships) {
                 if (p.getAccounts().get(0).getUsername().equalsIgnoreCase(username)) {
@@ -196,24 +133,3 @@ public class FriendshipController {
 
     }
 }
-    //
-//////        @PostMapping("/profiles/{profileId}/accounts")
-//////        public String assignAccount
-//////        (
-//////            @PathVariable
-//////        Long profileId // @RequestParam Long accountId
-//////        
-//////            ) {
-//////        Friendship f = friendshipRepository.getOne(profileId);
-//////
-//////            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//////            String username = auth.getName();
-//////            Account a = accountRepository.findByUsername(username);
-//////
-////////        friendRepository.set);
-//////// 
-////////        aircraftRepository.save(ac);
-//////// 
-//////            return "redirect:/profiles";
-//////        }
-

@@ -43,7 +43,7 @@
                     <tr th:each="photo : ${myphotos}">
                         
                         <td><a th:href="@{/photos/{id}(id=${photo.id})}" th:text="${photo.description}">description</a></td>
-                        <td th:text="${photo.description}">description</td>
+                     
                         
                         
                         <td><form th:action="@{/photos/{id}(id=${photo.id})}" th:method="delete">

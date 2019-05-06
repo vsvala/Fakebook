@@ -47,7 +47,4 @@ public class Message extends AbstractPersistable<Long>  {
     
 //    @ElementCollection(fetch = FetchType.LAZY)
 //    private List<Account> likes = new ArrayList<>();
-//    
-//    @ElementCollection(fetch = FetchType.LAZY)
-//    private List<Comment> comments = new ArrayList<>();
 }

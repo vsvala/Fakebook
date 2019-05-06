@@ -43,6 +43,7 @@ public class ProfilePictureController {
           ProfilePicture picture= user.getPicture();
           picture.setPictureId(id);   
           ppictureRepository.save(picture);
+          
           user.getPicture().setPictureId(id); 
           accountRepository.save(user);
          }

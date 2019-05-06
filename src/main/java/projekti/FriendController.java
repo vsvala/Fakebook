@@ -31,8 +31,7 @@ public class FriendController {
     public String list(Model model) {
 
         model.addAttribute("friend", friendRepository.findAll());
-
-        
+     
         return "account";
         // return "redirect:/accounts";
     }

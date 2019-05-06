@@ -7,16 +7,14 @@
     <body>
         <div th:replace="fragments/layout :: header"></div>
         
-           </br>
+        <br> </br>
               <main>
             <section class="container">
         <h1> <span th:text="${username}">username</span>'s friends <span th:text="${user.id}">Tilin tunnus</span></h1>
-       
-
-
+   
         
         <h2>Your Friends:</h2>
-        
+         
         <ol>
             <li th:each="uf: ${userfriends}">
                 <span th:text="${uf.username}">Kaverinnimi</span> and
@@ -93,16 +91,15 @@
         <ol>
             <li th:each="account : ${accounts}">
                 <a th:href="@{/account/{id}(id=${account.id})}">
-
                     <p th:text="${account.username}">msg</p>
-                    name:   <span th:text="${account.name}">msg</span>
-                    <!-- Profile name identifier<span th:text="${account.identifier}">msg</span>-->
-                    password: <span th:text="${account.password}">msg</span> 
+                    <!--      name:   <span th:text="${account.name}">msg</span>   </a> 
+                  password: <span th:text="${account.password}">msg</span> 
                     account: <span th:text="${account.id}">tilin id</span>, 
-                   <!-- Friends: <span th:text="${account.friendships.size()}">amount</span> -->
-                   </a> 
+                Friends: <span th:text="${account.friendships.size()}">amount</span> -->
+                
+                   
                 <!-- sending friendship request -->
-                <form th:action="@{/accounts/{id}/add(id=${account.id})}" method="POST">    <!--luodaan frienship/profiili/-->
+                <form th:action="@{/accounts/{id}/add(id=${account.id})}" method="POST">
                     <input type="submit"  class="btn btn-primary"  th:value="${'Send friendship request to ' + account.username +  account.id +' by '+username}"/>
                 </form>
             </li>

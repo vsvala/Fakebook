@@ -7,6 +7,7 @@ import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,12 +20,24 @@ import org.springframework.data.jpa.domain.AbstractPersistable;
 @AllArgsConstructor
 public class Account extends AbstractPersistable<Long> {
   
-   // private boolean accepted;
+    //private boolean accepted;
+    
+    @NotEmpty
+    @Size(min = 2, max = 30)
     private String name;
+    
+    @NotEmpty
+    @Size(min = 2, max = 30)
     private String profilename;
     @ManyToMany//(mappedBy = "accounts")//tää vois olla vaan yks
     private List<Friendship>friendships= new ArrayList<>();
+    
+    @NotEmpty
+    @Size(min = 2, max = 30)
     private String username;
+    
+    @NotEmpty
+    @Size(min = 2, max = 30)
     private String password;
   
     @ManyToMany

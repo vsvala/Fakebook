@@ -29,7 +29,6 @@ public class PhotoObject extends AbstractPersistable<Long> {
    // @Lob 
     private byte[] content;
     private String description;
-    //private Long profilePictureId;
     @ManyToOne
     private Account user; //id  
 

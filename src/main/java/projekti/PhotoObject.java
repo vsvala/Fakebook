@@ -25,8 +25,8 @@ public class PhotoObject extends AbstractPersistable<Long> {
     
     
  
-  //  @Basic(fetch = FetchType.LAZY)   //poistoon herokun takia myös lob
-   // @Lob 
+    @Basic(fetch = FetchType.LAZY)   //for heroku comment away this and lob
+    @Lob 
     private byte[] content;
     private String description;
     @ManyToOne

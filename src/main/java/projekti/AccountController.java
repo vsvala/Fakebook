@@ -179,7 +179,6 @@ public class AccountController {
         return "account";
     }
     
-   
 
     //creates account and frienship and validate fields 
     @PostMapping("/accounts")
@@ -189,8 +188,8 @@ public class AccountController {
         if (bindingResult.hasErrors()) {
             return "accounts";
         }
-    if (accountRepository.findByUsername(username) != null | username.isEmpty() ) {//jos tyhjä tai on jo
-        System.out.println("tyhjä tai username on jo");
+    if (accountRepository.findByUsername(username) != null | username.isEmpty() ) {
+        System.out.println("tyhjä tai username on jo");//TODO notification for user
         return "redirect:/accounts";
       }
         //creating account

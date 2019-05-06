@@ -34,7 +34,7 @@ public class PhotoObjectController {
     private FriendshipRepository friendshipRepository;
 
      @Autowired
-    private ProfilePictureRepository pictureRepository;  
+    private ProfilePictureRepository ppictureRepository;  
     
     @Autowired
     private PhotoObjectRepository photoRepository; //luodaan gif=PhotoObjectRepository  prepository olio
@@ -111,8 +111,8 @@ public class PhotoObjectController {
         p.setDescription(description);
         p.setContent(file.getBytes());
 
-//       if(file.getContentType().equals("image/*")){
-//        System.out.println("on image");  }
+    // if(file.getContentType().equals("image/*")){
+    //   System.out.println("on image");  
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
         Account account = accountRepository.findByUsername(username);
@@ -120,10 +120,9 @@ public class PhotoObjectController {
         photoRepository.save(p);
         account.getPhotos().add(p);
         accountRepository.save(account);
-
+  
         return "redirect:/photos";
     }
-
 
     @GetMapping(path = "/photos/{id}", produces = "image/*")//yksittäisen kuvan näyttö
     @ResponseBody
@@ -131,42 +130,14 @@ public class PhotoObjectController {
         return photoRepository.getOne(id).getContent();
 
     }
+  
     
-
-    @PutMapping("/photos/{id}/profilepicture")//yksittäisen kuvan näyttö
-    public String setProfilePicture(Model model, @PathVariable Long id) {
-        
-        System.out.println("pictureiiiiiiiiiidddddddddddddd"+id);
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String username = auth.getName();
-        Account user=accountRepository.findByUsername(username);
-     
-//        PhotoObject pp = photoRepository.getOne(id);
-         ProfilePicture picture= new  ProfilePicture(); 
-         picture.setPictureId(id);
-         
-         if( user.getPicture()!=null){//jPoistetaan jos on edellinen profiilipicture
-        // pictureRepository.delete(user.getPicture());
-          user.getPicture().setPictureId(id);
-//         accountRepository.save(user);
-           }
-//         else{
-         pictureRepository.save(picture);
-         user.setPicture(picture);
-        accountRepository.save(user);
-//         }
-        return "redirect:/messages/photos/{id}";
-    }
-
-    
-     //poistaminen pitää kattoo kytkökset..
     @DeleteMapping(path = "/photos/{id}")
     public String delete(@PathVariable Long id) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
         Account account = accountRepository.findByUsername(username);
         PhotoObject p = photoRepository.getOne(id);
-        //p.getUser().getPhotos().remove(p);
       
         account.getPhotos().remove(p);
         accountRepository.save(account);

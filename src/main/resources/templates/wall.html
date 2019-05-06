@@ -7,44 +7,67 @@
         <div th:replace="fragments/layout :: header"></div>
 
         <div class="container"> 
-            </br>
+            <br> </br>
 
             <h1> <span th:text="${username}">username</span>'s wall</h1>
-            <h2>profile picture:</h2>
 
-            <!-- <h1  th:text="${profilePicture}">profile</h1> -->
+
+
 
             <div th:if="${current != null}">
                 <img th:src="@{ /messages/photos/{id}/content(id=${current})}" width=auto height=300/>
+            </div>     
 
-            </div>
-
-            <p>TODO tykkäysnappulat kuvaan ja viesteihin</p>
-            <p>TODO kommentointi kuvaan ja viesteihin</p>
-            <!--Kommentointi tapahtuu viestin ja kuvan yhteydessä olevan kommentointikentän avulla. 
+            <a th:href="@{/photos}">Add or change profilepicture</a>
+            <!-- 
+       <p>TODO tykkäysnappulat kuvaan ja viesteihin</p>
             Kuvien ja viestien yhteydessä näytetään aina korkeintaan 10 uusinta kommenttia.-->
 
-
-            <h3>Send message</h3>
+            <br> </br>
+            <h2>Add message</h2>
 
             <form class="form"  th:action="@{/messages}" method="POST">
-                  <label for="exampleFormControlTextarea1">Message content:</label>
-                 <textarea class="form-control" id="exampleFormControlTextarea1" rows="2"  input type="text" name="message" ></textarea>
-            </br>
-                 <input type="submit" class="btn btn-primary" value="Add"/>
+                <label for="exampleFormControlTextarea1">Message content:</label>
+                <textarea class="form-control" id="exampleFormControlTextarea1" rows="2"  input type="text" name="message" ></textarea>
+                </br>
+                <input type="submit" class="btn btn-primary" value="Add message"/>
             </form>
-            </br>
-            <h2>Past messages</h2>
-         
+            <br> </br>
+            
+            
+            <h2>Comments:</h2>
+              
+            <ul>
+            <li th:each="comment : ${comments}">
+                            <span th:text="${comment.comment}">msg</span> 
+                           -Comment by  <span th:text="${comment.user.username}">username</span>
+              </li>
+              
+              </ul> 
+            <h2>Messages:</h2>
 
             <ul>
-                <li th:each="message : ${messages}">
-                    <span th:text="${message.message}">msg</span> 
-                    <span th:text="${message.messageDate}">date</span>
-                    - <span th:text="${message.user.username}">username</span>
 
-                </li>
-            </ul>
+                <li th:each="message : ${messages}">   
+                    <span th:text="${message.message}">msg</span> 
+                   -Message by <span th:text="${message.user.username}">username</span>
+                    <p  th:text="${message.messageDate}">date</p>
+      
+                   
+                    <ul>
+                   <form class="form"  th:action="@{/comments/messages/{id}(id=${message.id})}" method="POST">
+                        <label for="exampleFormControlTextarea1">Add comment to message</label>
+                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="1"  input type="text" name="content" ></textarea>
+                        </br>
+                        <input type="submit" class="btn btn-primary" value="Add comment"/>
+                    </form>
+                    <a th:href="@{/messages/{id}/comments(id=${message.id})}">Show comments</a>
+     
+                    </ul> 
+                </li> 
+            </ul>   
+         
+              
             <div>
                 </body>
                 </html>

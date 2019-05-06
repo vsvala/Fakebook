@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-public class MessageController {
+public class WallController {
 
     @Autowired
     private AccountRepository accountRepository;
@@ -25,9 +25,6 @@ public class MessageController {
     private MessageRepository msgRepository;
 
     @Autowired
-    private CommentRepository commentRepository;
-    
-    @Autowired
     private ProfilePictureRepository pictureRepository;
     
     @Autowired
@@ -35,7 +32,7 @@ public class MessageController {
 
     //Viestit näytetään seinällä niiden saapumisjärjestyksessä siten, että seinällä näkyy aina korkeintaan 25 uusinta viestiä.
    
- @GetMapping("/messages")
+ @GetMapping("/wall")
     public String redirect(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
@@ -44,13 +41,13 @@ public class MessageController {
          System.out.println("iddddphoto"+ user.getPicture().getPictureId());
           return "redirect:/messages/photos/"+user.getPicture().getPictureId();
         }
-       return "redirect:/messages/photos";
+       return "redirect:/wall/photos";
     }
 
 
     //TODO Sekä käyttäjä että käyttäjän kaverit voivat lähettää seinälle tekstimuotoisia viestejä. 
     //Jokaisesta viestistä näytetään viestin lähettäjän nimi, viestin lähetysaika, sekä viestin tekstimuotoinen sisältö. 
-    @PostMapping("/messages")
+    @PostMapping("/wall")
     public String create(@RequestParam String message) {
 
         //tähän tarkastus onko user ko.profiilin kaveri eli saako lähettää seinälle..
@@ -64,11 +61,11 @@ public class MessageController {
         // photo=photoRepository.getOne(id).getContent();
         msgRepository.save(msg);
 
-        return "redirect:/messages";
+        return "redirect:/wall";
     }
 
 
-    @GetMapping(value = "/messages/photos/{id}",  produces = "image/*")//)//yksittäisen kuvan näyttö
+    @GetMapping(value = "/wall/photos/{id}",  produces = "image/*")//)//yksittäisen kuvan näyttö
     public String viewOne(Model model, @PathVariable Long id) {
 
  
@@ -77,12 +74,19 @@ public class MessageController {
         Pageable pageable = PageRequest.of(0, 25, Sort.by("messageDate").descending());
         model.addAttribute("messages", msgRepository.findAll(pageable));
         model.addAttribute("username", username);
-   
-         model.addAttribute("current", id);
+
+//        Account user = accountRepository.findByUsername(username);
+//
+//        if (photoRepository.findByFriendship(user.getFriendships().get(0)) != null) {
+//            PhotoObject photo = photoRepository.findByFriendship(user.getFriendships().get(0));
+//            model.addAttribute("profilePicture", photo.getDescription());
+//            
+           model.addAttribute("current", id);
+       // }
         return "wall";
     }
     
-     @GetMapping(path = "/messages/photos/{id}/content", produces = "image/*")
+     @GetMapping(path = "/wall/photos/{id}/content", produces = "image/*")
     @ResponseBody
     public byte[] getContent(@PathVariable Long id) {
         return photoRepository.getOne(id).getContent();
@@ -90,35 +94,14 @@ public class MessageController {
     
 
 
-    @GetMapping(value = "/messages/photos")
+    @GetMapping(value = "/wall/photos")//)//yksittäisen kuvan näyttö
     public String getwall(Model model) {
 
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
-        Pageable pageable = PageRequest.of(0, 25, Sort.by("messageDate").descending());  
+        Pageable pageable = PageRequest.of(0, 25, Sort.by("messageDate").descending());
         model.addAttribute("messages", msgRepository.findAll(pageable));
         model.addAttribute("username", username);
-        return "wall";
-    }
-    
-        @GetMapping(value = "/messages/{id}/comments")
-        public String getwallWithComments(Model model, @PathVariable Long id) {
-
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String username = auth.getName();
-        Account user=accountRepository.findByUsername(username);
-        Pageable pageable = PageRequest.of(0, 25, Sort.by("messageDate").descending());  
-        
-        Message message=msgRepository.getOne(id);   
-        List<Comment>comments=message.getComments();
-        
-        ProfilePicture picture=user.getPicture();
-        
-        
-        model.addAttribute("comments", comments);
-        model.addAttribute("messages", msgRepository.findAll(pageable));
-        model.addAttribute("username", username);
-        model.addAttribute("current", picture.getPictureId());
         return "wall";
     }
 

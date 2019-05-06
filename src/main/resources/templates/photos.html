@@ -31,7 +31,7 @@
             <table>
                 <thead>
                     <tr>
-                        <!--    <th>Filename</th><th>Size</th><th>Content-Type</th><th>Delete</th>-->
+  
                         <th>Description</th>
                     </tr>
                 </thead>
@@ -41,13 +41,16 @@
                         <td colspan="4">No photos</td>
                     </tr>
                     <tr th:each="photo : ${myphotos}">
+                        
                         <td><a th:href="@{/photos/{id}(id=${photo.id})}" th:text="${photo.description}">description</a></td>
                         <td th:text="${photo.description}">description</td>
+                        
+                        
                         <td><form th:action="@{/photos/{id}(id=${photo.id})}" th:method="delete">
                                 <input type="submit" class="btn btn-danger"  value="Delete"/></form></td>
 
 
-                        <td> <form th:action="@{/photos/{id}/profilepicture(id=${photo.id})}" th:method="PUT">
+                        <td> <form th:action="@{/profilepicture/photos/{id}(id=${photo.id})}" th:method="POST">
                                 <input type="submit"  class="btn btn-primary" value="Add profile picture"/></form></td>
 
 

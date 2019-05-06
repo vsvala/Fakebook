@@ -37,6 +37,10 @@ public class AccountController {
 
     @Autowired
     PhotoObjectRepository photoRepository;
+    
+    @Autowired
+    WallRepository wallRepository;
+
 
     @Autowired
     PasswordEncoder passwordEncoder;
@@ -192,6 +196,12 @@ public class AccountController {
         System.out.println("tyhjä tai username on jo");//TODO notification for user
         return "redirect:/accounts";
       }
+     
+        //creating  wall
+        Wall wall = new Wall();
+        account.setWall(wall);
+        wallRepository.save(wall);
+       
         //creating account
         //account = new Account();
         account.setName(name);
@@ -200,7 +210,6 @@ public class AccountController {
         account.setProfilename(profilename);
         accountRepository.save(account);
 
-
         
         //creating friendship
         Friendship friendship = new Friendship();;
@@ -208,9 +217,12 @@ public class AccountController {
         friendship.getAccounts().add(account);//set as your friend 0 in the list
         account.getFriendships().add(friendship);
         friendshipRepository.save(friendship);
-        accountRepository.save(account);
+       
 
-        return "redirect:/account/friendships";
+    
+        //redirectataanko wallillle
+        return "redirect:wall";
+       // return "redirect:/account/friendships";
     }
 
    //  Add friend request to account

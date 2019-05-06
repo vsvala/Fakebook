@@ -5,7 +5,7 @@
     <body>
 
         <div th:replace="fragments/layout :: header"> <p>menu</p></div>
-    </br>
+        <br> </br>
 
 
         <!--<div class="container">  -->
@@ -14,17 +14,27 @@
                <h1>Fakebook</h1>
                 <h2>Register account</h2>
 
-                <form class="form"  method="POST" th:action="@{/accounts}">    
-                    <p>name<input type="text" class="form-control col-sm-5" name="name"</input></p>
-                    <p>Profile name<input type="text"  class="form-control col-sm-5" name="profilename"</input></p>
-                    <p>Username: <input type="text"  class="form-control col-sm-5"  name="username"</input></p>
-                    <p>Password<input type="password"  class="form-control col-sm-5 " name="password"</input></p>
+                <form class="form"  method="POST" th:action="@{/accounts}"  th:object="${account}">  
+                    
+                    <!--<p>name<input type="text" class="form-control col-sm-5" name="name"</input></p>-->
+                     <p>name<input class="form-control col-sm-5" type="text"  th:field="*{name}" name="name"</input></p>
+                    <td th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name error message</td>
+ 
+                       <!--<p>Profile name<input type="text"  class="form-control col-sm-5" name="profilename"</input></p>-->
+                     <p>Profile name<input  class="form-control col-sm-5" type="text"  th:field="*{profilename}" name="profilename"</input></p>
+                       <td th:if="${#fields.hasErrors('profilename')}" th:errors="*{profilename}">profile error message</td>
+                    
+                    <!--   <p>Username: <input type="text"  class="form-control col-sm-5"  name="username"</input></p>-->
+                    <p>Username: <input type="text"  class="form-control col-sm-5" th:field="*{username}"  name="username"</input></p>
+                       <td th:if="${#fields.hasErrors('username')}" th:errors="*{username}">username error message</td>
+                    
+                    <!-- <p>Password<input type="password"  class="form-control col-sm-5 " name="password"</input></p>-->
+                    <p>Password<input type="password"  class="form-control col-sm-5 "th:field="*{password}" name="password"</input></p>
+                       <td th:if="${#fields.hasErrors('password')}" th:errors="*{password}">password error message</td>
+                    
                     
                     <input type="submit" class="btn btn-primary" value="Add new account!"/>
                 </form>  
-
-
-
 
 
 

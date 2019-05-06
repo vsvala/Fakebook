@@ -44,7 +44,7 @@
                         <td><a th:href="@{/photos/{id}(id=${photo.id})}" th:text="${photo.description}">description</a></td>
                         <td th:text="${photo.description}">description</td>
                         <td><form th:action="@{/photos/{id}(id=${photo.id})}" th:method="delete">
-                                <input type="submit"class="btn btn-danger"  value="Delete"/></form></td>
+                                <input type="submit" class="btn btn-danger"  value="Delete"/></form></td>
 
 
                         <td> <form th:action="@{/photos/{id}/profilepicture(id=${photo.id})}" th:method="PUT">

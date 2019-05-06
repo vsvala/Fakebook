@@ -18,7 +18,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import java.time.LocalDateTime;
+import javax.validation.Valid;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 
 @Controller
 public class AccountController {
@@ -37,10 +40,15 @@ public class AccountController {
 
     @Autowired
     PasswordEncoder passwordEncoder;
+    
+    @ModelAttribute
+    private Account getAccount() {
+        return new Account();
+    }
 
     @GetMapping("/accounts")
-    public String list(Model model) {
-        model.addAttribute("accounts", accountRepository.findAll());
+    public String list(Model model, @ModelAttribute Account account) {
+       model.addAttribute("accounts", accountRepository.findAll());
         return "accounts";
     }
 
@@ -60,7 +68,7 @@ public class AccountController {
 
     //  get all user's  friends 
     @GetMapping("/account/friendships/{id}")
-    public String getFriendsSearch(Model model, @PathVariable Long id) {
+    public String getFriendsSearch(Model model, @PathVariable Long id ) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
         Account user = accountRepository.findByUsername(username);
@@ -171,27 +179,32 @@ public class AccountController {
         return "account";
     }
     
-    
-    
-    
+   
 
-    //creates account and frienship
+    //creates account and frienship and validate fields 
     @PostMapping("/accounts")
-    public String createAccount(@RequestParam String username, @RequestParam String password, @RequestParam String name, @RequestParam String profilename) {
-        if (accountRepository.findByUsername(username) != null) {
-            return "redirect:/accounts";
+     public String createAccount(@RequestParam String username, @RequestParam String name, @RequestParam String profilename,@RequestParam String password,
+    @Valid @ModelAttribute Account account,
+            BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "accounts";
         }
+//        if (accountRepository.findByUsername(username) != null) {
+//            return "redirect:/accounts";
+
         //creating account
-        Account account = new Account();
+        account = new Account();
         account.setName(name);
         account.setUsername(username);
         account.setPassword(passwordEncoder.encode(password));
         account.setProfilename(profilename);
         accountRepository.save(account);
 
+
+        
         //creating friendship
         Friendship friendship = new Friendship();;
-        friendship.setProfileName(profilename);
+        friendship.setProfileName(account.getProfilename());
         friendship.getAccounts().add(account);//set as your friend 0 in the list
         account.getFriendships().add(friendship);
         friendshipRepository.save(friendship);
